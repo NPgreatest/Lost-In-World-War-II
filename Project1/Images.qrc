@@ -1,0 +1,32 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/Bedrock1.bmp</file>
+        <file>images/Bedrock2.bmp</file>
+        <file>images/EnemyDown.bmp</file>
+        <file>images/EnemyLeft.bmp</file>
+        <file>images/EnemyRight.bmp</file>
+        <file>images/EnemyUp.bmp</file>
+        <file>images/River1.bmp</file>
+        <file>images/River2.bmp</file>
+        <file>images/Shot.bmp</file>
+        <file>images/TankDown.bmp</file>
+        <file>images/TankDownOut.bmp</file>
+        <file>images/TankLeft.bmp</file>
+        <file>images/TankLeftOut.bmp</file>
+        <file>images/TankRight.bmp</file>
+        <file>images/TankRightOut.bmp</file>
+        <file>images/TankUp.bmp</file>
+        <file>images/TankUpOut.bmp</file>
+        <file>images/Wall1.bmp</file>
+        <file>images/Wall2.bmp</file>
+        <file>images/eraser.bmp</file>
+        <file>images/eraser2.bmp</file>
+        <file>images/test300x300.bmp</file>
+        <file>images/Camp.bmp</file>
+        <file>images/FirstAid.bmp</file>
+        <file>images/Weapon.bmp</file>
+        <file>images/BackGround.jpg</file>
+        <file>images/icon.bmp</file>
+        <file>images/BattleGround.jpg</file>
+    </qresource>
+</RCC>
