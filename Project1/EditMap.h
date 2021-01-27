@@ -33,10 +33,16 @@ private:
     int Ctype=1;
     bool me=false;
     bool acc=true;
-    int type[200]={0};
-    XY pos[200]={0,0},area[200]={0,0};
+    int type[Edit_Max]={0};
+    XY pos[Edit_Max]={0,0},area[Edit_Max]={0,0};
+
     XY ppos;
 
+
+    int e_hp[Edit_Max]={0};
+    int e_speed[Edit_Max]={0};
+    int e_bullet_speed[Edit_Max]={0};
+    XY e_pos[Edit_Max]={0,0},e_area[Edit_Max]={0,0};
 };
 
 #endif // EDITMAP_H

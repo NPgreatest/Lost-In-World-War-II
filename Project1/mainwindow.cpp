@@ -30,10 +30,11 @@ void MainWindow::paintEvent(QPaintEvent *event){
 
 void MainWindow::on_test_clicked()
 {
-    QMessageBox::information(nullptr,tr("提示"),tr("若无地图文件\n请先编辑地图\n再选择已创建的地图"), tr("好"));
-    QMessageBox::information(nullptr,tr("提示"),tr("上下左右空格控制坦克"), tr("好"));
+ //   QMessageBox::information(nullptr,tr("提示"),tr("若无地图文件\n请先编辑地图\n再选择已创建的地图"), tr("好"));
+ //   QMessageBox::information(nullptr,tr("提示"),tr("上下左右空格控制坦克"), tr("好"));
     Battle=new BattleWindow;
     Battle->show();
+    Battle->Load_Status(false);
     this->~MainWindow();
 }
 
@@ -46,7 +47,10 @@ void MainWindow::on_Map_clicked()
 
 void MainWindow::on_AboutAuthor_clicked()
 {
-    QMessageBox::information(nullptr,tr("作者"),tr("Jack\ndgq"), tr("好"));
+    Battle=new BattleWindow;
+    Battle->show();
+    Battle->Load_Status(true);
+    this->~MainWindow();
 }
 
 void MainWindow::on_Exit_clicked()

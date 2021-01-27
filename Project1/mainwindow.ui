@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>迷失的坦克beta0.0.1</string>
+   <string>迷失的坦克beta0.0.2</string>
   </property>
   <property name="styleSheet">
    <string notr="true"/>
@@ -27,7 +27,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>测试模式</string>
+     <string>加载地图(测试模式)</string>
     </property>
    </widget>
    <widget class="QPushButton" name="button2">
@@ -66,7 +66,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>关于作者</string>
+     <string>游戏介绍</string>
     </property>
    </widget>
    <widget class="QPushButton" name="Exit">

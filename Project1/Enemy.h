@@ -5,15 +5,16 @@
 class Enemy
 {
 private:
-    int HP,MP,WeapenLv,Material,B1Speed;
+    int HP,MP,WeapenLv,B1Speed,skin;
     XY a;   //敌人长宽
     PlayerBullet1 B1[5];
     int speed;
     HEAD head;
     XY pos;
     bool alive=false;
+    int flash=-1;
 public:
-    Enemy(XY p,XY area,int hp,int mp);
+    Enemy(XY p,XY area,int hp,int speed,int bullet_speed,int skin);
     Enemy();
     ~Enemy();
     void Enemy_Move(int step);
@@ -33,6 +34,11 @@ public:
     XY GetBulletPos(int x){return B1[x].GetPos();}
     bool GetAlive(){return alive;}
     XY GetArea(){return a;}
+    void Flash();
+    void Flash_Begin(){flash=0;}
+    int GetFlash(){return flash;}
+    int GetSkin(){return skin;}
+    void Dead(){alive=false;}
 };
 
 #endif // ENEMY_H

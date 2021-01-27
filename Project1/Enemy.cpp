@@ -3,17 +3,21 @@
 #include "Enemy.h"
 #include <QMessageBox>
 #include<QtDebug>
-Enemy::Enemy(XY p,XY area,int hp,int mp)
+Enemy::Enemy(XY p,XY area,int hp,int speed,int bullet_speed,int skin)
 {
-    pos=p;HP=hp;MP=mp;a=area;
-    a.x=50;a.y=50;B1Speed=10;speed=5;
-    WeapenLv=1;Material=0;head=UP;alive=true;
+    this->pos=p;HP=hp;MP=100;this->a=area;this->skin=skin;
+    B1Speed=bullet_speed;this->speed=speed;
+    WeapenLv=1;head=UP;alive=true;
+}
+void Enemy::Flash(){
+    flash++;
+    if(flash>5)flash=-1;
 }
 Enemy::Enemy()
 {
-    pos.x=0;pos.y=0;HP=100;MP=100;
+    pos.x=0;pos.y=0;HP=100;MP=100;skin=1;
     a.x=50;a.y=50;speed=5;B1Speed=10;
-    WeapenLv=1;Material=0;head=UP;alive=false;
+    WeapenLv=1;head=UP;alive=false;
 }
 void Enemy::Enemy_Move(int step){
     switch (head){
@@ -45,9 +49,9 @@ void Enemy::Enemy_UnderAttack(int damage){
     HP-=damage;
     if(HP<0){
         alive=false;
-        pos.x=-10000;
-        pos.y=-10000;
-        a.x=1;a.y=1;
+     //   pos.x=-10000;
+     //   pos.y=-10000;
+       // a.x=1;a.y=1;
     }
 }
 

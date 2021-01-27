@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>迷失的坦克beta0.0.1</string>
+   <string>迷失的坦克beta0.0.2</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QProgressBar" name="Bar">
@@ -27,7 +27,7 @@
      </rect>
     </property>
    </widget>
-   <widget class="QLabel" name="show">
+   <widget class="QLabel" name="showhp">
     <property name="geometry">
      <rect>
       <x>1460</x>

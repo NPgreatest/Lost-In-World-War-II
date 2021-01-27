@@ -21,12 +21,29 @@
         <file>images/Wall2.bmp</file>
         <file>images/eraser.bmp</file>
         <file>images/eraser2.bmp</file>
-        <file>images/test300x300.bmp</file>
         <file>images/Camp.bmp</file>
         <file>images/FirstAid.bmp</file>
         <file>images/Weapon.bmp</file>
         <file>images/BackGround.jpg</file>
         <file>images/icon.bmp</file>
         <file>images/BattleGround.jpg</file>
+        <file>images/Boom1.bmp</file>
+        <file>images/Boom2.bmp</file>
+        <file>images/Boom3.bmp</file>
+        <file>images/Boom4.bmp</file>
+        <file>images/Boom5.bmp</file>
+        <file>images/Boom6.bmp</file>
+        <file>images/RedZone1.bmp</file>
+        <file>images/RedZone2.bmp</file>
+        <file>images/test300x300.bmp</file>
+        <file>images/EnemyDown2.bmp</file>
+        <file>images/EnemyLeft2.bmp</file>
+        <file>images/EnemyRight2.bmp</file>
+        <file>images/EnemyUp2.bmp</file>
+        <file>images/name1.png</file>
+        <file>images/school.png</file>
+        <file>images/name2.png</file>
+        <file>images/title.png</file>
+        <file>images/fill.jpg</file>
     </qresource>
 </RCC>
