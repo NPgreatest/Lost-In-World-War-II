@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>EditMap</class>
+ <widget class="QMainWindow" name="EditMap">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>2000</width>
+    <height>1000</height>
+   </rect>
+  </property>
+  <property name="cursor">
+   <cursorShape>ArrowCursor</cursorShape>
+  </property>
+  <property name="windowTitle">
+   <string>地图编辑</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QPushButton" name="Finish">
+    <property name="geometry">
+     <rect>
+      <x>1512</x>
+      <y>790</y>
+      <width>71</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>完成</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="Back">
+    <property name="geometry">
+     <rect>
+      <x>1510</x>
+      <y>860</y>
+      <width>71</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>返回</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="checkBox">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>1510</x>
+      <y>747</y>
+      <width>91</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>精准模式</string>
+    </property>
+    <property name="checked">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="comboBox">
+    <property name="geometry">
+     <rect>
+      <x>1530</x>
+      <y>0</y>
+      <width>471</width>
+      <height>101</height>
+     </rect>
+    </property>
+    <property name="currentIndex">
+     <number>0</number>
+    </property>
+    <property name="maxVisibleItems">
+     <number>20</number>
+    </property>
+    <item>
+     <property name="text">
+      <string>橡皮擦</string>
+     </property>
+     <property name="icon">
+      <iconset resource="Images.qrc">
+       <normaloff>:/images/eraser.bmp</normaloff>:/images/eraser.bmp</iconset>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>房子</string>
+     </property>
+     <property name="icon">
+      <iconset resource="Images.qrc">
+       <normaloff>:/images/Wall1.png</normaloff>:/images/Wall1.png</iconset>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>基岩</string>
+     </property>
+     <property name="icon">
+      <iconset resource="Images.qrc">
+       <normaloff>:/images/BedRock1.png</normaloff>:/images/BedRock1.png</iconset>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>河</string>
+     </property>
+     <property name="icon">
+      <iconset resource="Images.qrc">
+       <normaloff>:/images/River1.jpg</normaloff>:/images/River1.jpg</iconset>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string extracomment="暂未开放">传送门</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>敌方兵营1</string>
+     </property>
+     <property name="icon">
+      <iconset resource="Images.qrc">
+       <normaloff>:/images/Camp1.jpg</normaloff>:/images/Camp1.jpg</iconset>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>急救包1</string>
+     </property>
+     <property name="icon">
+      <iconset resource="Images.qrc">
+       <normaloff>:/images/FirstAid1.png</normaloff>:/images/FirstAid1.png</iconset>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>武器箱1</string>
+     </property>
+     <property name="icon">
+      <iconset resource="Images.qrc">
+       <normaloff>:/images/Weapon1.png</normaloff>:/images/Weapon1.png</iconset>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>敌方兵营2</string>
+     </property>
+     <property name="icon">
+      <iconset resource="Images.qrc">
+       <normaloff>:/images/Camp2.jpg</normaloff>:/images/Camp2.jpg</iconset>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>急救包2</string>
+     </property>
+     <property name="icon">
+      <iconset resource="Images.qrc">
+       <normaloff>:/images/FirstAid2.png</normaloff>:/images/FirstAid2.png</iconset>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>武器箱2</string>
+     </property>
+     <property name="icon">
+      <iconset resource="Images.qrc">
+       <normaloff>:/images/Weapon2.png</normaloff>:/images/Weapon2.png</iconset>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>敌方兵营3</string>
+     </property>
+     <property name="icon">
+      <iconset resource="Images.qrc">
+       <normaloff>:/images/Camp3.jpg</normaloff>:/images/Camp3.jpg</iconset>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>急救包3</string>
+     </property>
+     <property name="icon">
+      <iconset resource="Images.qrc">
+       <normaloff>:/images/FirstAid3.png</normaloff>:/images/FirstAid3.png</iconset>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>武器箱3</string>
+     </property>
+     <property name="icon">
+      <iconset resource="Images.qrc">
+       <normaloff>:/images/Weapon3.png</normaloff>:/images/Weapon3.png</iconset>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>废墟</string>
+     </property>
+     <property name="icon">
+      <iconset resource="Images.qrc">
+       <normaloff>:/images/Ruins1.png</normaloff>:/images/Ruins1.png</iconset>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>丛林</string>
+     </property>
+     <property name="icon">
+      <iconset resource="Images.qrc">
+       <normaloff>:/images/Grass1.png</normaloff>:/images/Grass1.png</iconset>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>钉子</string>
+     </property>
+     <property name="icon">
+      <iconset resource="Images.qrc">
+       <normaloff>:/images/Nail.png</normaloff>:/images/Nail.png</iconset>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>冰</string>
+     </property>
+     <property name="icon">
+      <iconset resource="Images.qrc">
+       <normaloff>:/images/ice1.png</normaloff>:/images/ice1.png</iconset>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>敌人</string>
+     </property>
+     <property name="icon">
+      <iconset resource="Images.qrc">
+       <normaloff>:/images/EnemyDown_1.png</normaloff>:/images/EnemyDown_1.png</iconset>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>玩家</string>
+     </property>
+     <property name="icon">
+      <iconset resource="Images.qrc">
+       <normaloff>:/images/TankLeft.png</normaloff>:/images/TankLeft.png</iconset>
+     </property>
+    </item>
+   </widget>
+   <widget class="QCheckBox" name="checkBox_2">
+    <property name="geometry">
+     <rect>
+      <x>1510</x>
+      <y>677</y>
+      <width>73</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>背景</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources>
+  <include location="Images.qrc"/>
+ </resources>
+ <connections/>
+</ui>
