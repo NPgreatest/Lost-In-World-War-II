@@ -1,0 +1,26 @@
+<RCC>
+    <qresource prefix="/maps">
+        <file>maps/Introduce.txt</file>
+        <file>maps/1_1.txt</file>
+        <file>maps/1_2.txt</file>
+    </qresource>
+    <qresource prefix="/RougeLike">
+        <file>RougeLike/1_0.txt</file>
+        <file>RougeLike/1_1.txt</file>
+        <file>RougeLike/1_2.txt</file>
+        <file>RougeLike/1_3.txt</file>
+        <file>RougeLike/1_100.txt</file>
+        <file>RougeLike/1_4.txt</file>
+        <file>RougeLike/1_5.txt</file>
+        <file>RougeLike/1_6.txt</file>
+        <file>RougeLike/1_7.txt</file>
+        <file>RougeLike/1_8.txt</file>
+        <file>RougeLike/1_9.txt</file>
+        <file>RougeLike/1_10.txt</file>
+        <file>RougeLike/1_101.txt</file>
+        <file>RougeLike/1_102.txt</file>
+        <file>RougeLike/1_200.txt</file>
+        <file>RougeLike/1_201.txt</file>
+        <file>RougeLike/1_202.txt</file>
+    </qresource>
+</RCC>
