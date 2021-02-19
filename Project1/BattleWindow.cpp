@@ -1,77 +1,46 @@
 #include "BattleWindow.h"
 #include "ui_BattleWindow.h"
-#include <QEvent>
-#include <QKeyEvent>
-#include <QMessageBox>
-#include<QDebug>
-#include<QFile>
-#include<QFileDialog>
-#include<QRandomGenerator>
-#include <QIcon>
-#include <QInputDialog>
-#include<QMediaPlayer>
-#include<QSound>
-BattleWindow::BattleWindow(QWidget *parent) : QMainWindow(parent),ui(new Ui::BattleWindow)
-{
+#include"mainwindow.h"
+BattleWindow::BattleWindow(QWidget *parent) : QMainWindow(parent),ui(new Ui::BattleWindow){
     ui->setupUi(this);
-
     setPalette(QPalette(Qt::yellow));
     setAutoFillBackground(true);
-    this->setStyleSheet("#BattleWindow{border-image:url(:/images/BattleGround.jpg);}");
-
-
-    QTimer *timer = new QTimer(this);
-    QTimer *flash = new QTimer(this);
-    QTimer *enemymove = new QTimer(this);
-    QTimer *enemyall = new QTimer(this);
-    QTimer *generate = new QTimer(this);
-    QTimer *boom = new QTimer(this);
-    QTimer *redzone=new QTimer(this);
-    connect(timer, SIGNAL(timeout()), this, SLOT(update()));
-    connect(timer, SIGNAL(timeout()), this, SLOT(bulletfly()));
-    connect(flash, SIGNAL(timeout()), this, SLOT(Flash()));
-    connect(&move, SIGNAL(timeout()), this, SLOT(Move()));
-    connect(enemymove, SIGNAL(timeout()), this, SLOT(Enemy_Move()));
-    connect(enemyall, SIGNAL(timeout()), this, SLOT(Enemy_All()));
-    connect(generate, SIGNAL(timeout()), this, SLOT(Enemy_Generate()));
-    connect(boom, SIGNAL(timeout()), this, SLOT(Flash2()));
-    connect(redzone, SIGNAL(timeout()), this, SLOT(RedZone_Generate()));
-
-
-      if(Red_Zone!=0) redzone->start(Red_Zone_Fre);
-      timer->start(10);
-      flash->start(1000);
-      enemymove->start(50);
-      enemyall->start(100);
-      generate->start(5000);
-      boom->start(50);
+    this->setStyleSheet("#BattleWindow{border-image:url(:/Images/Images/BattleGround.png);}");
+    setWindowIcon(QIcon(":/Images/Images/icon.png"));
 }
+
 void BattleWindow::Load_Map(QString Address){
-    int i=0,k=0,read=0;
+    int i=0,read=0,tlv,tmat,tb1c;
+    bool me=false;
     XY P;int thp,tmp;
     XY pos[Edit_Max]={0,0};
     XY area[Edit_Max]={0,0};
     int type[Edit_Max]={0};
-
+    int skin[Edit_Max]={0};
+    int hp[Edit_Max]={1};
     int e_hp[Edit_Max]={0};
     int e_speed[Edit_Max]={0};
     int e_bullet_speed[Edit_Max]={0};
     XY e_pos[Edit_Max]={0,0},e_area[Edit_Max]={0,0};
+    int e_skin[Edit_Max]={0};
 
 
     QFile file(Address);
     if(!file.open(QIODevice::ReadOnly)){
         QMessageBox::information(nullptr,tr("提示"),tr("加载地图失败"), tr("好"));
-        this->close();
+        this->~BattleWindow();backto=new MainWindow;
+        backto->setMouseTracking(true);backto->show();return;
     }
     QTextStream input(&file);
     while(!input.atEnd()){
         QString line=input.readLine();
+        QStringList list=line.split(" ");
         if(line=="CObject:"){
             read=1;i=0;
         continue;
         }
         if(line=="CPlayer:"){
+            me=true;
             read=2;i=0;
         continue;
         }
@@ -81,92 +50,169 @@ void BattleWindow::Load_Map(QString Address){
         }
         switch (read) {
         case 1:
-            switch (i%5) {
-            case 0:type[i/5]=line.toInt();i++;break;
-            case 1:pos[(i-1)/5].x=line.toInt();i++;break;
-            case 2:pos[(i-2)/5].y=line.toInt();i++;break;
-            case 3:area[(i-3)/5].x=line.toInt();i++;break;
-            case 4:area[(i-4)/5].y=line.toInt();i++;break;
-            }break;
-        case 2:switch(i){
-            case 0:P.x=line.toInt();i++;break;
-            case 1:P.y=line.toInt();i++;break;
-            case 2:thp=line.toInt();i++;break;
-            case 3:tmp=line.toInt();i++;break;
-            }break;
+            type[i]=list[0].toInt();
+            pos[i].x=list[1].toInt();
+            pos[i].y=list[2].toInt();
+            area[i].x=list[3].toInt();
+            area[i].y=list[4].toInt();
+            hp[i]=list[5].toInt();
+            skin[i]=list[6].toInt();
+            i++;break;
+        case 2:
+            P.x=list[0].toInt();
+            P.y=list[1].toInt();
+            thp=list[2].toInt();
+            tmp=list[3].toInt();
+            tlv=list[4].toInt();
+            tmat=list[5].toInt();
+            tb1c=list[6].toInt();
+            break;
         case 3:
-            switch (i%7) {
-            case 0:e_pos[i/7].x=line.toInt();i++;break;
-            case 1:e_pos[(i-1)/7].y=line.toInt();i++;break;
-            case 2:e_area[(i-2)/7].x=line.toInt();i++;break;
-            case 3:e_area[(i-3)/7].y=line.toInt();i++;break;
-            case 4:e_hp[(i-4)/7]=line.toInt();i++;break;
-            case 5:e_speed[(i-5)/7]=line.toInt();i++;break;
-            case 6:e_bullet_speed[(i-6)/7]=line.toInt();i++;break;
-            }break;
+            e_pos[i].x=list[0].toInt();
+            e_pos[i].y=list[1].toInt();
+            e_area[i].x=list[2].toInt();
+            e_area[i].y=list[3].toInt();
+            e_hp[i]=list[4].toInt();
+            e_speed[i]=list[5].toInt();
+            e_bullet_speed[i]=list[6].toInt();
+            e_skin[i]=list[7].toInt();
+            i++;break;
         default:break;
         }
     }
     file.close();
-    new(&P1)Player(P,thp,tmp);
-
+    if(me==true)
+        new(&P1)Player(P,thp,tmp,tlv,tmat,tb1c);
     for(i=0;i<Edit_Max;i++){
-
-        new(&object[i])Object(pos[i],area[i],type[i]);
+        CreateObject(pos[i],area[i],type[i],skin[i],hp[i]);
     }
 
+for(i=0;i<Edit_Max;i++){
+     if(e_area[i].x==0||e_area[i].y==0)continue;
+     CreatePartical(e_pos[i],e_area[i],Type::Object_Hit);
+     CreateEnemy(e_pos[i],e_area[i],e_hp[i],e_speed[i],e_bullet_speed[i],e_skin[i]);
+    }
+
+}
+
+
+void BattleWindow::Load_Status(bool intro,int x){
+    XY temp={200,200};
+   // new(boss1)Boss1(temp,100,1);
+  //  boss1->Boss1_ChangeHead(2);
+    Mission=x;
+    int i,k;
     for(i=0;i<Edit_Max;i++){
-        if(e_area[i].x==0||e_area[i].y==0)continue;
-            for(k=0;k<Edit_Max;k++){
-            if(enemy[k].GetAlive()==false){
-            new(&enemy[k])Enemy(e_pos[i],e_area[i],e_hp[i],e_speed[i],e_bullet_speed[i],1);break;
-            }
+        object[i]=new Temp();
     }
 
 
-}
-}
-void BattleWindow::Load_Status(bool intro){
-    if(intro==true){this->Load_Introduce();return;}
-    Red_Zone_Fre=QInputDialog::getInt(this,tr("DIY"),tr("输入轰炸频率/ms"),5000,100,20000,100,nullptr,nullptr);
-    Red_Zone=QInputDialog::getInt(this,tr("DIY"),tr("输入轰炸几率%"),50,0,100,1,nullptr,nullptr);
+    RedZone_Image[0].load(":/Images/Tank/RedZone1.png");
+    RedZone_Image[1].load(":/Images/Tank/RedZone1.png");
+    RedZone_Image[2].load(":/Images/Tank/RedZone1.png");
+    RedZone_Image[3].load(":/Images/Tank/RedZone1.png");
+    RedZone_Image[4].load(":/Images/Tank/RedZone1.png");
+    RedZone_Image[5].load(":/Images/Tank/RedZone2.png");
+    RedZone_Image[0]=Image_Transparent(RedZone_Image[0],50);
+    RedZone_Image[1]=Image_Transparent(RedZone_Image[1],100);
+    RedZone_Image[2]=Image_Transparent(RedZone_Image[2],150);
+    RedZone_Image[3]=Image_Transparent(RedZone_Image[3],200);
+    RedZone_Image[4]=Image_Transparent(RedZone_Image[4],255);
+    RedZone_Image[5]=Image_Transparent(RedZone_Image[5],255);
+
+
+    Enemy_Image[0][0].load(":/Images/Tank/EnemyUp_1.png");
+    Enemy_Image[0][1].load(":/Images/Tank/EnemyDown_1.png");
+    Enemy_Image[0][2].load(":/Images/Tank/EnemyLeft_1.png");
+    Enemy_Image[0][3].load(":/Images/Tank/EnemyRight_1.png");
+    Enemy_Image[1][0].load(":/Images/Tank/EnemyUp_1.png");
+    Enemy_Image[1][1].load(":/Images/Tank/EnemyDown_1.png");
+    Enemy_Image[1][2].load(":/Images/Tank/EnemyLeft_1.png");
+    Enemy_Image[1][3].load(":/Images/Tank/EnemyRight_1.png");
+    Enemy_Image[2][0].load(":/Images/Tank/EnemyUp_2.png");
+    Enemy_Image[2][1].load(":/Images/Tank/EnemyDown_2.png");
+    Enemy_Image[2][2].load(":/Images/Tank/EnemyLeft_2.png");
+    Enemy_Image[2][3].load(":/Images/Tank/EnemyRight_2.png");
+    Enemy_Image[3][0].load(":/Images/Tank/EnemyUp_3.png");
+    Enemy_Image[3][1].load(":/Images/Tank/EnemyDown_3.png");
+    Enemy_Image[3][2].load(":/Images/Tank/EnemyLeft_3.png");
+    Enemy_Image[3][3].load(":/Images/Tank/EnemyRight_3.png");
+    Enemy_Image[4][0].load(":/Images/Tank/EnemyUp_4.png");
+    Enemy_Image[4][1].load(":/Images/Tank/EnemyDown_4.png");
+    Enemy_Image[4][2].load(":/Images/Tank/EnemyLeft_4.png");
+    Enemy_Image[4][3].load(":/Images/Tank/EnemyRight_4.png");
+    Enemy_Image[5][0].load(":/Images/Tank/EnemyUp_5.png");
+    Enemy_Image[5][1].load(":/Images/Tank/EnemyDown_5.png");
+    Enemy_Image[5][2].load(":/Images/Tank/EnemyLeft_5.png");
+    Enemy_Image[5][3].load(":/Images/Tank/EnemyRight_5.png");
+    Bar[0].load(":/Images/Images/Bar1.png");
+    Bar[1].load(":/Images/Images/Bar2.png");
+    Bar[2].load(":/Images/Images/Bar3.png");
+    Bar[3].load(":/Images/Images/Bar4.png");
+    Bar[4].load(":/Images/Images/Bar5.png");
+    Skill_Select[0].load(":/Images/Images/SkillSelect.png");
+    Skill_Select[1].load(":/Images/Tank/Bullet1.png");
+    Skill_Select[2].load(":/Images/Tank/Bullet2.png");
+    Skill_Select[3].load(":/Images/Tank/Bullet3.png");
+
+    Bullet_Sound->setMedia(QUrl("qrc:/sounds/sounds/Player_Hit1.mp3"));
+    RedZone_Sound->setMedia(QUrl("qrc:/sounds/sounds/RedZone.mp3"));
+    MPOut->setMedia(QUrl("qrc:/sounds/sounds/Wrong.mp3"));
+
+    QTimer *timer = new QTimer(this);//QTImer启动
+    QTimer *flash = new QTimer(this);
+    QTimer *enemymove = new QTimer(this);
+    QTimer *enemyall = new QTimer(this);
+    QTimer *generate = new QTimer(this);
+    QTimer *boom = new QTimer(this);
+
+    connect(timer, SIGNAL(timeout()), this, SLOT(update()));
+    connect(timer, SIGNAL(timeout()), this, SLOT(bulletfly()));//出大问题
+    connect(flash, SIGNAL(timeout()), this, SLOT(Flash()));
+    connect(&move, SIGNAL(timeout()), this, SLOT(Move()));
+    connect(&fix,  SIGNAL(timeout()), this, SLOT(P1_Fix()));
+    connect(enemymove, SIGNAL(timeout()), this, SLOT(Enemy_Move()));
+    connect(enemymove, SIGNAL(timeout()), this, SLOT(Boss_Move()));
+    connect(enemyall, SIGNAL(timeout()), this, SLOT(Enemy_All()));
+    connect(generate, SIGNAL(timeout()), this, SLOT(Enemy_Generate()));
+    connect(boom, SIGNAL(timeout()), this, SLOT(Flash2()));
+
+      boom->start(50);
+      timer->start(10);
+      flash->start(1000);
+      enemymove->start(50);
+      enemyall->start(100);
+      generate->start(5000);//QTimer
+
+
+    if(intro==true){this->Load_Introduce();QTimer *timer = new QTimer(this);//介绍模式
+        connect(timer, SIGNAL(timeout()), this, SLOT(update()));
+        timer->start(10);
+        return;}
+    BackGroundMusic->setMedia(QUrl("qrc:/sounds/sounds/BattleMusic1.mp3"));
+    BackGroundMusic->setVolume(100);
+    BackGroundMusic->play();
+    switch (x) {
+    case 1:Mission1();return;
+    case 2:Mission2();return;
+    case 100:MissionRougueLike();return;
+    }
+
+   /* Red_Zone_Fre=QInputDialog::getInt(this,tr("DIY"),tr("输入轰炸频率/ms"),5000,100,20000,100,nullptr,nullptr);
+    Red_Zone=QInputDialog::getInt(this,tr("DIY"),tr("输入轰炸几率%"),50,0,100,1,nullptr,nullptr);*/
     QString Address = QFileDialog::getOpenFileName(this,tr("选择地图"),nullptr, tr("Image Files (*.txt)"));
     Load_Map(Address);
-
-}
-void BattleWindow::Load_Introduce(){
-    Load_Map(":/maps/maps/Introduce1.txt");
-    Red_Zone=100;
-    Red_Zone_Fre=1000;
-  //  delete ui->Bar;
-  //  delete ui->showhp;
-    Introduce_Flash();
-QTimer::singleShot(2000, this, SLOT());
-    QTimer *in=new QTimer(this);
-        connect(in, SIGNAL(timeout()), this, SLOT(Introduce_Flash()));
-        in->start(50);
+    //QTimer
+  /*    QTimer *redzone=new QTimer(this);
+      connect(redzone, SIGNAL(timeout()), this, SLOT(RedZone_Generate()));
+      redzone->start(Red_Zone_Fre);*/
 
 }
 
-void BattleWindow::Introduce_Flash(){
-    IntroduceP++;
-            if(IntroduceP>=120&&IntroduceP<200){
-
-                P1.Player_ChangeHead(3);
-                Player_Move();
-                        P1.Player_B1Fire();
-            }
-            if(IntroduceP>=200&&IntroduceP<320){
-
-                P1.Player_ChangeHead(1);
-                Player_Move();
-                P1.Player_B1Fire();
-            }
-}
 BattleWindow::~BattleWindow(){}
 
-void BattleWindow::RedZone_Generate(){
-    int i,j,k,x,r,type;
+/*void BattleWindow::RedZone_Generate(){
+    int i,x,r,type;
     XY pos;
     x = QRandomGenerator::global()->generate();
     if(x%(100/Red_Zone)!=0)return;
@@ -180,39 +226,94 @@ void BattleWindow::RedZone_Generate(){
     redzone[i].Flash_Begin();
     return;
 }
-}
+}*/
 
-void BattleWindow::Flash(){
+
+void BattleWindow::Flash(){//1秒刷新一次
     int i;
-    for(i=0;i<Edit_Max;i++){
-        if(object[i].GetAlive()==false)continue;
-        if(object[i].GetHP()==-1&&object[i].GetType()==2){object[i].Hit();}
-        if(object[i].GetType()==3) object[i].Hit();
+    Total_Time++;
+    CreatePartical(P1.GetPos(),P1.GetArea(),Type::Mist);
+    switch (Mission) {
+    case 1:Mission1_J();break;
     }
-    for(i=0;i<Edit_Min;i++){
+    for(i=0;i<Edit_Max;i++){//物体动画
+        if(!object[i]->GetAlive())continue;
+        object[i]->Flash();
+        if(object[i]->GetType()==10&&P1.Player_Hit(object[i]->GetPos(),object[i]->GetArea())==true&&object[i]->GetOther()==1){
+            P1.Player_UnderAttack(1);
+            object[i]->Flash();
+            CreatePartical(P1.GetPos(),P1.GetArea(),Type::Player_Damage);
+        }
+    }
+    for(i=0;i<Edit_Min;i++){//轰炸区动画
         if(redzone[i].GetAlive()==false)continue;
         if(redzone[i].GetFlash()==-1)continue;
         if(redzone[i].GetFlash()==4)RedZoneBoom(i);
         redzone[i].Flash();
     }
+    for(i=0;i<Edit_Min;i++){//敌人AI
+        if(enemy[i].GetAlive()==false)continue;
+        if(enemy[i].GetSkin()==3||enemy[i].GetSkin()==4){
+            enemy[i].Enemy_ChangeHead(AI1(P1.GetPos(),enemy[i].GetPos()));
+        }
+    }
+    if(boss1->GetAlive()==true)boss1->Boss1_ChangeHead(AI1(P1.GetPos(),boss1->GetPos()));//boss AI
+     if(QRandomGenerator::global()->generate()%2==0&&boss1->GetAlive()==true){
+         boss1->Boss1_B3Fire();
+         XY t1=boss1->GetPos();XY t2=boss1->GetPos();
+         switch (boss1->GetHead()) {
+         case UP:t1.y=0;t2={150,boss1->GetPos().y}; CreatePartical(t1,t2,Type::Object_Hit);break;
+         case DOWN:t2={150,1000};CreatePartical(t1,t2,Type::Object_Hit);break;
+         case LEFT:t1.x=0;t2={boss1->GetPos().x,150};CreatePartical(t1,t2,Type::Object_Hit);break;
+         case RIGHT:t2={10000,150};CreatePartical(t1,t2,Type::Object_Hit);break;
+         }
+     }
+
+     if(P1.GetHP()<0){
+         QMessageBox::information(nullptr,tr("提示"),tr("您失败了"), tr("好"));
+         this->~BattleWindow();backto=new MainWindow;
+         backto->setMouseTracking(true);backto->show();
+     }
+
+     //判断敌人是否
+    Win=true;
+    for(i=0;i<Edit_Max;i++){
+        if(enemy[i].GetAlive()==true)Win=false;
+        if(object[i]->GetAlive()==true&&object[i]->GetType()==5)Win=false;
+    }
+    if(Win==true){
+        switch (Mission) {
+        case 1:{XY t={0,0};ClearMap(t);Load_Map(":/maps/maps/1_2.txt");Mission++;break;}
+        case 100:MissionRougueLike_Continue();return;
+        }
+
+        }
+     /*   QMessageBox::information(nullptr,tr("恭喜"),tr("您赢了"), tr("好"));
+        this->~BattleWindow();backto=new MainWindow;
+        backto->setMouseTracking(true);backto->show();*/
+
+
 }
+
+
 void BattleWindow::Flash2(){
     int i;
-    for (i=0;i<Edit_Max ;i++ ) {
-        if(object[i].GetAlive()==false)continue;
-        if(object[i].GetFlash()!=-1)object[i].Flash();
-    }
-    for (i=0;i<Edit_Max;i++) {
-        if(enemy[i].GetFlash()==-1)continue;
-        enemy[i].Flash();
+    P1.Player_Bullet3Flash();
+    boss1->Boss1_Bullet3Flash();
+    for(i=0;i<Edit_Max;i++){
+        if(partical[i].GetAlive()==false)continue;
+        partical[i].FLash();
     }
 }
+
+
 void BattleWindow::RedZoneBoom(int x){
+    Play_RedZone();
     int i;
     for(i=0;i<Edit_Max;i++){
-    if(object[i].GetAlive()==false)continue;
-    if(redzone[x].Object_Hit(object[i].GetPos(),object[i].GetArea())==true){
-        object[i].Dead();
+    if(object[i]->GetAlive()==false)continue;
+    if(redzone[x].Object_Hit(object[i]->GetPos(),object[i]->GetArea())==true){
+        object[i]->Dead();
     }
 }
     for(i=0;i<Edit_Max;i++){
@@ -221,228 +322,310 @@ void BattleWindow::RedZoneBoom(int x){
         enemy[i].Dead();
     }
 }
-
-
-
+    if(redzone[x].Object_Hit(P1.GetPos(),P1.GetArea())==true){
+        P1.Player_UnderAttack(100);
+    }
 }
-void BattleWindow::bulletfly(){
+
+
+void BattleWindow::bulletfly(){//子弹
 int i;
 P1.Player_B1_Move();
+P1.Player_B2_Move();
 for(i=0;i<Edit_Max;i++){
     enemy[i].Enemy_B1_Move();
 }
+if(boss1->GetAlive()==true){
+        boss1->Boss1_B1_Move();
+}
 Bullet_HitCheck();
 }
+
+
 void BattleWindow::Bullet_HitCheck(){
-    int i,k,j;
+    int i,k,j;XY temp={50,50};bool B3=false;
     for(i=0;i<Edit_Max;i++){//子弹命中敌人
     if(enemy[i].GetAlive()==false)continue;
     for(k=0;k<P1.GetBulletC();k++){//for
-    if(P1.Player_BulletHit(k,enemy[i].GetPos(),enemy[i].GetArea())==true){
-        enemy[i].Enemy_UnderAttack(1);
+    if(P1.Player_Bullet1Hit(k,enemy[i].GetPos(),enemy[i].GetArea())==true){
+        enemy[i].Enemy_UnderAttack(P1.GetWeaponLv()+5);//子弹等级+5
         P1.Player_B1_Hit(k);
-        enemy[i].Flash_Begin();
+            if(enemy[i].GetAlive()==false)CreatePartical(enemy[i].GetPos()-temp,enemy[i].GetArea()+temp+temp,Type::Object_Hit);
+            else {CreatePartical(enemy[i].GetPos(),enemy[i].GetArea(),Type::Object_Hit);}
         }
     }//end for
-    }
+    if(P1.Player_Bullet2Hit(enemy[i].GetPos(),enemy[i].GetArea())==true){
+        enemy[i].Enemy_UnderAttack(P1.GetWeaponLv());//子弹等级
+            if(enemy[i].GetAlive()==false)CreatePartical(enemy[i].GetPos()-temp,enemy[i].GetArea()+temp+temp,Type::Object_Hit);
+            else {CreatePartical(enemy[i].GetPos(),enemy[i].GetArea(),Type::Object_Hit);}
 
-    for(i=0;i<Edit_Max;i++){
-    if(object[i].GetAlive()==false||object[i].GetType()==6||object[i].GetType()==7)continue;
-    for(k=0;k<P1.GetBulletC();k++){//for
-    if(P1.Player_BulletHit(k,object[i].GetPos(),object[i].GetArea())==true){
-        if(object[i].GetType()!=3){
-        object[i].Hit();
-        P1.Player_B1_Hit(k);
-
+        }
+    if(P1.GetBullet3Flash()==3&&P1.GetBullet3Alive()==true){
+        if(P1.Player_Bullet3Hit(enemy[i].GetPos(),enemy[i].GetArea())==true){
+            enemy[i].Enemy_UnderAttack(P1.GetWeaponLv()/5==0?1:P1.GetWeaponLv()/5);//子弹等级除以5
+            B3=true;
             }
         }
-    }//end for
-    for(j=0;j<Edit_Max;j++){
-        if(enemy[j].GetAlive()==false||object[i].GetType()==5||object[i].GetType()==6||object[i].GetType()==7)continue;
+    }//子弹命中敌人
+    if(B3==true)P1.Player_B3_Hit();
+    for(i=0;i<P1.GetBulletC();i++){//玩家打中boss判定
+        if(boss1->GetAlive()==true&&P1.Player_Bullet1Hit(i,boss1->GetPos(),boss1->GetArea())==true){
+            P1.Player_B1_Hit(i);boss1->Boss1_UnderAttack(P1.GetWeaponLv()+5);
+            CreatePartical(boss1->GetPos(),boss1->GetArea(),Type::Object_Hit);
+        }
+    }
+    if(boss1->GetAlive()==true&&P1.Player_Bullet2Hit(boss1->GetPos(),boss1->GetArea())==true){
+        boss1->Boss1_UnderAttack(P1.GetWeaponLv());
+        CreatePartical(boss1->GetPos(),boss1->GetArea(),Type::Object_Hit);
+    }
+    if(boss1->GetAlive()==true&&P1.GetBullet3Flash()==3&&P1.GetBullet3Alive()==true&&P1.Player_Bullet3Hit(boss1->GetPos(),boss1->GetArea())==true){
+       boss1->Boss1_UnderAttack(P1.GetWeaponLv()/5==0?1:P1.GetWeaponLv()/5);
+        CreatePartical(boss1->GetPos(),boss1->GetArea(),Type::Object_Hit);
+    }//玩家打中boss判定
+
+    for(i=0;i<Edit_Max;i++){//子弹打方块
+    if(object[i]->GetAlive()==false)continue;
+    for(k=0;k<P1.GetBulletC();k++){
+    if(P1.Player_Bullet1Hit(k,object[i]->GetPos(),object[i]->GetArea())==true){
+        if(object[i]->Hit()==true){
+            CreatePartical(object[i]->GetPos(),object[i]->GetArea(),Type::Object_Hit);
+            P1.Player_B1_Hit(k);
+            Play_PlayerHit();
+        }
+    }
+    }
+    }//子弹打方块
+
+    for(i=0;i<Edit_Max;i++){
+        if(object[i]->GetAlive()==false||object[i]->GetType()==5)continue;
+    for(j=0;j<Edit_Max;j++){//敌人子弹打方块
+        if(enemy[j].GetAlive()==false)continue;
         for(k=0;k<5;k++){
-            if(enemy[j].Enemy_BulletHit(k,object[i].GetPos(),object[i].GetArea())==true){
-                if(object[i].GetType()!=3){
-                object[i].Hit();
-                enemy[j].Enemy_B1_Hit(k);
-                    }
-            }
+         if(enemy[j].Enemy_BulletHit(k,object[i]->GetPos(),object[i]->GetArea())==true&&object[i]->Hit()==true){
+             enemy[j].Enemy_B1_Hit(k);
+             CreatePartical(object[i]->GetPos(),object[i]->GetArea(),Type::Object_Hit);
+         }
         }
     }
+}//子弹打方块
+
+//Boss子弹命中玩家
+
+    XY t={30,30};
+    for(i=0;i<Edit_Min;i++){
+        if(P1.Player_Hit(boss1->GetBulletPos(i),t)==true&&boss1->GetAlive()==true){
+            P1.Player_UnderAttack(10);
+            CreatePartical(P1.GetPos(),P1.GetArea(),Type::Player_Damage);
+            boss1->Boss1_B1_Hit(i);
+        }
     }
-    for(i=0;i<Edit_Max;i++){
+    if(P1.Player_Hit(boss1->GetBullet3Pos(),boss1->GetBullet3Area())==true&&boss1->GetBullet3Flash()>=8&&boss1->GetAlive()==true){//boss技能判定
+        P1.Player_UnderAttack(100);
+        CreatePartical(P1.GetPos(),P1.GetArea(),Type::Player_Damage);
+        boss1->Boss1_B3_Hit();
+    }
+    for(i=0;i<Edit_Max;i++){//敌人子弹命中玩家f
         if(enemy[i].GetAlive()==false)continue;
         for(k=0;k<5;k++){
             if(enemy[i].Enemy_BulletHit(k,P1.GetPos(),P1.GetArea())==true){
                 P1.Player_UnderAttack(1);
+                CreatePartical(P1.GetPos(),P1.GetArea(),Type::Player_Damage);
                 enemy[i].Enemy_B1_Hit(k);
-                if(P1.Player_Dead()==true){
-                    QMessageBox::information(nullptr,tr("提示"),tr("您失败了"), tr("好"));
-                    this->close();return;
-
-                }
             }
         }
     }
+
 }
+
+
+
 void BattleWindow::Player_HitCheck(){
     int i;
+    P1.Player_UnSlow();
     if(P1.GetPos().x<0||P1.GetPos().x+50>X_Max||P1.GetPos().y<0||P1.GetPos().y+50>Y_Max){//玩家边界判断
         P1.Player_Move(-1);
         Player_HitCheck();//递归处理
     }
     for(i=0;i<Edit_Max;i++){//墙判断
-        if(object[i].GetAlive()==false)continue;
-        if(P1.Player_Hit(object[i].GetPos(),object[i].GetArea())==true){
-            if(object[i].GetType()==6){//急救包
-                P1.Strengthen(1,0,0,0,0);
-                object[i].Hit();
+        if(object[i]->GetAlive()==false)continue;
+        if(P1.Player_Hit(object[i]->GetPos(),object[i]->GetArea())==true&&object[i]->Contact()==true){
+            switch (object[i]->GetType()) {
+            case 4:MissionRougueLike_Win();break;//传送门功能
+            case 6:switch (object[i]->GetSkin()) {
+                case 1:P1.Strengthen(2,0,0,0,0,0);return;
+                case 2:P1.Strengthen(10,0,0,0,0,0);return;
+                case 3:P1.Strengthen(50,0,0,0,0,0);return;
+            }break;
+            case 7:switch (object[i]->GetSkin()) {
+                case 1:P1.Strengthen(0,20,0,20,0,0);return;
+                case 2:P1.Strengthen(0,50,0,50,0,0);return;
+                case 3:P1.Strengthen(0,150,0,150,0,0);return;
+
+            }break;
+            case 11:P1.Player_Slow();break;
+            case 10:if(object[i]->GetOther()==0)break;
+                P1.Player_UnderAttack(1);
+                CreatePartical(P1.GetPos(),P1.GetArea(),Type::Player_Damage);
+                object[i]->Flash();
+                break;
+            default:            P1.Player_Move(-1);
+                Player_HitCheck();break;
             }
-            if(object[i].GetType()==7){//武器箱
-                P1.Strengthen(0,0,0,0,1);
-                object[i].Hit();
-            }
-            P1.Player_Move(-1);
-            Player_HitCheck();//递归处理
+
         }
     }//墙end
+}
+
+void BattleWindow::Boss_Move(){
+  /*  if(boss1->GetAlive()==false)return;
+    int i;bool hit=false;
+    boss1->Boss1_Move(5);
+a:   if(boss1->GetPos().x<0||boss1->GetPos().x+boss1->GetArea().x>X_Max||  //边界碰撞
+           boss1->GetPos().y<0||boss1->GetPos().y+boss1->GetArea().y>Y_Max){
+       boss1->Boss1_Move(-1);hit=true;goto a;
+   }//边界碰撞
+    for(i=0;i<Edit_Max;i++){
+        if(object[i].GetAlive()==false)continue;
+
+    b:    if(boss1->Boss1_Hit(object[i].GetPos(),object[i].GetArea())==true){
+            switch (object[i].GetType()){
+            case 2:boss1->Boss1_Move(-1);hit=true;goto b;break;
+            case 1:
+            case 3:
+            case 14:
+            case 15:
+            case 16:object[i].Dead();break;
+            }
+        }
     }
+    if(hit==true)boss1->Boss1_RndChangeHead();*/
+}
 
 
-void BattleWindow::paintEvent(QPaintEvent *event){
-        ui->Bar->setValue(P1.GetHP());
+void BattleWindow::Enemy_Move(){
+    int i,k;
+    for(i=0;i<Edit_Max;i++){
+        bool ice=false,hit=false;
+        if(enemy[i].GetAlive()==false)continue;//敌人死了就跳出
+
+        enemy[i].Enemy_Move(enemy[i].GetMoveSpeed());
+             a:   if(enemy[i].GetPos().x<0||enemy[i].GetPos().x+enemy[i].GetArea().x>X_Max||  //边界碰撞
+                        enemy[i].GetPos().y<0||enemy[i].GetPos().y+enemy[i].GetArea().y>Y_Max){
+                    enemy[i].Enemy_Move(-1);hit=true;goto a;
+                //    enemy[i].Enemy_RndChangeHead();
+                }//边界碰撞
+        for(k=0;k<Edit_Max;k++){
+            if(!object[k]->GetAlive())continue;
+
+        b:    if(enemy[i].Enemy_Hit(object[k]->GetPos(),object[k]->GetArea())==true&&object[k]->Contact()==true){
+                hit=true;
+                switch (object[k]->GetType()){
+                case 4:
+                case 6:
+                case 7:hit=false;break;
+                case 11:enemy[i].Enemy_Slow();ice=true;break;
+                default:
+                    enemy[i].Enemy_Move(-1);hit=true;goto b;break;
+                }
+            }
+        }
+        if(ice==false)enemy[i].Enemy_UnSlow();
+        if(hit==true&&ice==false)enemy[i].Enemy_RndChangeHead();
+    }
+}
+
+
+
+void BattleWindow::paintEvent(QPaintEvent *event){//画界面
         int i,k;
         QPainter painter(this);//Qpainter
         //QImage
-        QImage P1_Image("://images/TankUp.bmp");
-        QImage Wall_Image1("://images/Wall1.bmp");
-        QImage Wall_Image2("://images/Wall2.bmp");
-        QImage Bedrock_Image1("://images/Bedrock1.bmp");
-        QImage Bedrock_Image2("://images/Bedrock2.bmp");
-        QImage River_Image1("://images/River1.bmp");
-        QImage River_Image2("://images/River2.bmp");
-        QImage Camp_Image1("://images/Camp.bmp");
-        QImage FirstAid_Image1("://images/FirstAid.bmp");
-        QImage Weapon_Image1("://images/Weapon.bmp");
-        QImage RedZone_Image[6];
-        RedZone_Image[0].load("://images/RedZone1.bmp");RedZone_Image[0]=Image_Transparent(RedZone_Image[0],50);
-        RedZone_Image[1].load("://images/RedZone1.bmp");RedZone_Image[1]=Image_Transparent(RedZone_Image[1],100);
-        RedZone_Image[2].load("://images/RedZone1.bmp");RedZone_Image[2]=Image_Transparent(RedZone_Image[2],150);
-        RedZone_Image[3].load("://images/RedZone1.bmp");RedZone_Image[3]=Image_Transparent(RedZone_Image[3],200);
-        RedZone_Image[4].load("://images/RedZone1.bmp");RedZone_Image[4]=Image_Transparent(RedZone_Image[4],255);
-        RedZone_Image[5].load("://images/RedZone2.bmp");RedZone_Image[5]=Image_Transparent(RedZone_Image[5],255);
-        QImage Boom_Image1("://images/Boom1.bmp");Boom_Image1=Image_Cut(Boom_Image1);
-        QImage Boom_Image2("://images/Boom2.bmp");Boom_Image2=Image_Cut(Boom_Image2);
-        QImage Boom_Image3("://images/Boom3.bmp");Boom_Image3=Image_Cut(Boom_Image3);
-        QImage Boom_Image4("://images/Boom4.bmp");Boom_Image4=Image_Cut(Boom_Image4);
-        QImage Boom_Image5("://images/Boom5.bmp");Boom_Image5=Image_Cut(Boom_Image5);
-        QImage Boom_Image6("://images/Boom6.bmp");Boom_Image6=Image_Cut(Boom_Image6);
-        QImage Enemy_Image[4];        QImage Enemy_Image2[4];
-        Enemy_Image[0].load("://images/EnemyUp.bmp");       Enemy_Image[0]=Image_Cut(Enemy_Image[0]);
-        Enemy_Image[1].load("://images/EnemyDown.bmp");     Enemy_Image[1]=Image_Cut(Enemy_Image[1]);
-        Enemy_Image[2].load("://images/EnemyLeft.bmp");     Enemy_Image[2]=Image_Cut(Enemy_Image[2]);
-        Enemy_Image[3].load("://images/EnemyRight.bmp");    Enemy_Image[3]=Image_Cut(Enemy_Image[3]);
-        Enemy_Image2[0].load("://images/EnemyUp2.bmp");       Enemy_Image2[0]=Image_Cut(Enemy_Image2[0]);
-        Enemy_Image2[1].load("://images/EnemyDown2.bmp");     Enemy_Image2[1]=Image_Cut(Enemy_Image2[1]);
-        Enemy_Image2[2].load("://images/EnemyLeft2.bmp");     Enemy_Image2[2]=Image_Cut(Enemy_Image2[2]);
-        Enemy_Image2[3].load("://images/EnemyRight2.bmp");    Enemy_Image2[3]=Image_Cut(Enemy_Image2[3]);
-        switch (P1.GetHead()) {
-        case UP:P1_Image.load("://images/TankUp.bmp");break;
-        case DOWN:P1_Image.load("://images/TankDown.bmp");break;
-        case LEFT:P1_Image.load("://images/TankLeft.bmp");break;
-        case RIGHT:P1_Image.load("://images/TankRight.bmp");break;
+        QImage P1_Bullet_Image(":/Images/Tank/Shot.png");
+        QImage P2_Bullet_Image(":/Images/Tank/Shot2.png");
+        QImage Enemy_Bullet_Image(":/Images/Tank/Shot.png");
+
+        QImage Boss_Image[4];
+        Boss_Image[0].load(":/Images/Tank/BossUp.png");
+        Boss_Image[1].load(":/Images/Tank/BossDown.png");
+        Boss_Image[2].load(":/Images/Tank/BossLeft.png");
+        Boss_Image[3].load(":/Images/Tank/BossRight.png");
+        QRect Boss_Rect(boss1->GetPos().x,boss1->GetPos().y,150,150);
+        QRect Boss_Bullet_Rect[Edit_Min];
+        if(boss1->GetAlive()==true){
+        switch (boss1->GetHead()) {
+        case UP:painter.drawImage(Boss_Rect,Boss_Image[0]);break;
+        case DOWN:painter.drawImage(Boss_Rect,Boss_Image[1]);break;
+        case LEFT:painter.drawImage(Boss_Rect,Boss_Image[2]);break;
+        case RIGHT:painter.drawImage(Boss_Rect,Boss_Image[3]);break;
         }
-        P1_Image=Image_Cut(P1_Image);
-        QImage P1_Bullet_Image(":/images/Shot.bmp");
-        QImage Enemy_Bullet_Image(":/images/Shot.bmp");
+        for(i=0;i<Edit_Min;i++){
+            Boss_Bullet_Rect[i].setRect(boss1->GetBulletPos(i).x,boss1->GetBulletPos(i).y,30,30);
+            painter.drawImage(Boss_Bullet_Rect[i],P2_Bullet_Image);
+        }
+        }
+
 
         //QRect
         QRect P1_Rect(P1.GetPos().x,P1.GetPos().y,50,50);
         QRect P1_Bullet_Rect[10];
-        QRect *Enemy_Rect=new QRect[Edit_Max];
+        QRect P2_Bullet_Rect[Edit_Min];
+        QRect Enemy_Rect[Edit_Max];
         QRect Enemy_Bullet_Rect[Edit_Max][5];
         QRect *ObjectRect=new QRect[Edit_Max];
-        QPoint Line1(1500,0);
-        QPoint Line2(1500,1000);
-        painter.drawLine(Line1,Line2);
-        for(i=0;i<Edit_Max;i++){
-            if(object[i].GetAlive()==false)continue;
-            new(&ObjectRect[i])QRect(object[i].GetPos().x,object[i].GetPos().y,object[i].GetArea().x,object[i].GetArea().y);
-            switch (object[i].GetType()) {
-            case 1:
-                if(object[i].GetHP()==1)
-            painter.drawImage(ObjectRect[i],Wall_Image1);
-                else
-            painter.drawImage(ObjectRect[i],Wall_Image2);
-            break;
-            case 2:
-                if(object[i].GetHP()==-1) painter.drawImage(ObjectRect[i],Bedrock_Image2);
-                else painter.drawImage(ObjectRect[i],Bedrock_Image1);
-                break;
-            case 3:
-                if(object[i].GetHP()==1) painter.drawImage(ObjectRect[i],River_Image1);
-                else painter.drawImage(ObjectRect[i],River_Image2);
-                break;
-            case 5:
-                painter.drawImage(ObjectRect[i],Camp_Image1);
-                break;
-            case 6:
-                painter.drawImage(ObjectRect[i],FirstAid_Image1);
-                break;
-            case 7:
-                painter.drawImage(ObjectRect[i],Weapon_Image1);
-                break;
-            }
-    }
 
-        for(i=0;i<P1.GetBulletC();i++){
-            if(P1.GetBulletAlive(i)==true){
-            P1_Bullet_Rect[i].adjust(P1.GetBulletPos(i).x,P1.GetBulletPos(i).y,10,10);
-            painter.drawImage(P1_Bullet_Rect[i],P1_Bullet_Image);}
+        QRect SkillR(1500,0,100,100);
+        painter.drawImage(SkillR,Skill_Select[0]);
+        switch (Skill) {
+        case 1:painter.drawImage(SkillR,Skill_Select[1]);break;
+        case 2:painter.drawImage(SkillR,Skill_Select[2]);break;
+        case 3:painter.drawImage(SkillR,Skill_Select[3]);break;
         }
-        painter.drawImage(P1_Rect,P1_Image);
 
 
+        for(i=0;i<Edit_Max;i++){//创建物体
+            if(!object[i]->GetAlive())continue;
+            painter.drawImage(object[i]->GetRect(),object[i]->GetImage());
+        }
+
+        painter.drawImage(P1.GetRect(),P1.GetImage());//画玩家
+
+        drawBar(painter);//画血槽
+
+        for(i=0;i<Edit_Max;i++){//创建粒子
+            if(partical[i].GetAlive()==false)continue;
+            painter.drawImage(partical[i].GetRect(),partical[i].GetImage());
+        }
 
 
-        for(i=0;i<Edit_Max;i++){
-
-
-            if(enemy[i].GetAlive()==false&&enemy[i].GetFlash()==-1)continue;
-            new(&Enemy_Rect[i])QRect(enemy[i].GetPos().x,enemy[i].GetPos().y,50,50);
+        for(i=0;i<Edit_Max;i++){//画敌人
+            if(enemy[i].GetAlive()==false)continue;
+            Enemy_Rect[i].setRect(enemy[i].GetPos().x,enemy[i].GetPos().y,enemy[i].GetArea().x,enemy[i].GetArea().y);
 
             for(k=0;k<5;k++){
                 if(enemy[i].GetBulletAlive(k)==false)continue;
-                if(enemy[i].GetAlive()==false)continue;
-                Enemy_Bullet_Rect[i][k].setRect(enemy[i].GetBulletPos(k).x,enemy[i].GetBulletPos(k).y,10,10);
-                painter.drawImage(Enemy_Bullet_Rect[i][k],Enemy_Bullet_Image);
+                Enemy_Bullet_Rect[i][k].setRect(enemy[i].GetBulletPos(k).x,enemy[i].GetBulletPos(k).y,30,30);
+                painter.drawImage(Enemy_Bullet_Rect[i][k],P1_Bullet_Image);
             }
-            switch (enemy[i].GetSkin()) {
-            case 1:
             switch (enemy[i].GetHead()) {
-            case UP:painter.drawImage(Enemy_Rect[i],Enemy_Image[0]);break;
-            case DOWN:painter.drawImage(Enemy_Rect[i],Enemy_Image[1]);break;
-            case LEFT:painter.drawImage(Enemy_Rect[i],Enemy_Image[2]);break;
-            case RIGHT:painter.drawImage(Enemy_Rect[i],Enemy_Image[3]);break;
-            }break;
-            case 2:
-            switch (enemy[i].GetHead()) {
-            case UP:painter.drawImage(Enemy_Rect[i],Enemy_Image2[0]);break;
-            case DOWN:painter.drawImage(Enemy_Rect[i],Enemy_Image2[1]);break;
-            case LEFT:painter.drawImage(Enemy_Rect[i],Enemy_Image2[2]);break;
-            case RIGHT:painter.drawImage(Enemy_Rect[i],Enemy_Image2[3]);break;
+            case UP:painter.drawImage(Enemy_Rect[i],Enemy_Image[enemy[i].GetSkin()][0]);break;
+            case DOWN:painter.drawImage(Enemy_Rect[i],Enemy_Image[enemy[i].GetSkin()][1]);break;
+            case LEFT:painter.drawImage(Enemy_Rect[i],Enemy_Image[enemy[i].GetSkin()][2]);break;
+            case RIGHT:painter.drawImage(Enemy_Rect[i],Enemy_Image[enemy[i].GetSkin()][3]);break;
             }
-            }
-            if(enemy[i].GetAlive()==true)continue;
-            switch (enemy[i].GetFlash()) {
-            case 0:painter.drawImage(Enemy_Rect[i],Boom_Image1);break;
-            case 1:painter.drawImage(Enemy_Rect[i],Boom_Image2);break;
-            case 2:painter.drawImage(Enemy_Rect[i],Boom_Image3);break;
-            case 3:painter.drawImage(Enemy_Rect[i],Boom_Image4);break;
-            case 4:painter.drawImage(Enemy_Rect[i],Boom_Image5);break;
-            case 5:painter.drawImage(Enemy_Rect[i],Boom_Image6);break;
-            default:break;
-            }
+        }//画敌人
+
+        for(i=0;i<P1.GetBulletC();i++){
+            if(P1.GetBulletAlive(i)==true){
+            P1_Bullet_Rect[i].setRect(P1.GetBulletPos(i).x,P1.GetBulletPos(i).y,30,30);
+            painter.drawImage(P1_Bullet_Rect[i],P1_Bullet_Image);}
         }
+            if(P1.GetBullet2Alive()==true){
+            P2_Bullet_Rect[i].setRect(P1.GetBullet2Pos().x,P1.GetBullet2Pos().y,30,30);
+            painter.drawImage(P2_Bullet_Rect[i],P2_Bullet_Image);
+        }
+
+
+
         //paint RedZone
         for(i=0;i<Edit_Min;i++){
             if(redzone[i].GetAlive()==false)continue;
@@ -450,171 +633,155 @@ void BattleWindow::paintEvent(QPaintEvent *event){
             painter.drawImage(temp,RedZone_Image[redzone[i].GetFlash()]);
         }
 //paint Introduce
-        if(IntroduceP==0)return;
-        QImage school("://images/school.png");
-        QImage school2;
-        QImage name1("://images/name1.png");
-        QImage name12;
-        QImage name2("://images/name2.png");
-        QImage name22;
-        QImage fill("://images/fill.jpg");
-        QImage title_image("://images/title.png");
-        fill=Image_Transparent(fill,200);
-        title_image=Image_Cut(title_image);
-        QRect school_rect(500,200,550,113);
-        QRect name_rect(500,500,583,332);
-        QRect tital(0,400,1600,200);
-        QRect title(0,400,1600,200);
-        if(IntroduceP>0&&IntroduceP<120)
-        painter.fillRect(0,0,1600,1000,QColor(Qt::black));
-        if(IntroduceP>20&&IntroduceP<40){
-            school2=Image_Transparent(school,(IntroduceP-20)*12);
-            name12=Image_Transparent(name1,(IntroduceP-20)*12);
-            painter.drawImage(school_rect,school2);
-            painter.drawImage(name_rect,name12);
+        if(IntroduceP!=0)drawIntroduce(painter);
+        switch (Mission) {
+        case 1:drawMission1(painter);break;
         }
-        if(IntroduceP>=40&&IntroduceP<60){
-            school2=Image_Transparent(school,255);
-            name12=Image_Transparent(name1,255);
-            painter.drawImage(school_rect,school2);
-            painter.drawImage(name_rect,name12);
-        }
-        if(IntroduceP>=60&&IntroduceP<80){
-            school2=Image_Transparent(school,255);
-            name12=Image_Transparent(name1,255-13*(IntroduceP-60));
-            painter.drawImage(school_rect,school2);
-            painter.drawImage(name_rect,name12);
-        }
-        if(IntroduceP>=80&&IntroduceP<100){
-            school2=Image_Transparent(school,255);
-            name22=Image_Transparent(name2,(IntroduceP-80)*12);
-            painter.drawImage(school_rect,school2);
-            painter.drawImage(name_rect,name22);
-        }
-        if(IntroduceP>=100&&IntroduceP<120){
-            school2=Image_Transparent(school,255-13*(IntroduceP-100));
-            name22=Image_Transparent(name2,255-13*(IntroduceP-100));
-            painter.drawImage(school_rect,school2);
-            painter.drawImage(name_rect,name22);
-         //   if(Introduce_Music1==false){
-         //       Music_Introduce();
-           //     Introduce_Music1=true;
-         //   }
-        }
-        if(IntroduceP>=120&&IntroduceP<250){
-            title.setRect(title.x()+50,title.y(),title.width(),title.height());
-            painter.drawImage(tital,fill);
-            painter.drawImage(title,title_image);
-        }
-        if(IntroduceP>=250){
-            this->close();
-        }
-
 }
 
-void BattleWindow::Enemy_Move(){
-    int i,k;
-    for(i=0;i<Edit_Max;i++){
-        if(enemy[i].GetAlive()==false)continue;
-        enemy[i].Enemy_Move(enemy[i].GetMoveSpeed());
-                if(enemy[i].GetPos().x<0||enemy[i].GetPos().x+enemy[i].GetArea().x>X_Max||
-                        enemy[i].GetPos().y<0||enemy[i].GetPos().y+enemy[i].GetArea().y>Y_Max){
-                    enemy[i].Enemy_Move(-(enemy[i].GetMoveSpeed()));
-                    enemy[i].Enemy_RndChangeHead();
-                }
-        for(k=0;k<Edit_Max;k++){
-            if(object[k].GetAlive()==false)continue;
-            if(enemy[i].Enemy_Hit(object[k].GetPos(),object[k].GetArea())==true){
-                enemy[i].Enemy_Move(-(enemy[i].GetMoveSpeed()));
-                enemy[i].Enemy_RndChangeHead();
-        }
-        }
-
+void BattleWindow::drawBar(QPainter &painter){
+    int i;
+  /*  QImage BarF(":/images/FlagMeter.png");
+    QImage Bar1,Bar2;
+    QImage Barp(":/images/FlagMeterParts.png");
+    QRect temp(1500,0,300,30);
+    QRect temp2(1500,0,P1.GetHP()>300?300:P1.GetHP(),30);
+    Bar1=BarF.copy(0,0,100,27);
+    Bar2=BarF.copy(0,27,P1.GetHP()>300?100:P1.GetHP()/3,27);
+    painter.drawImage(temp,Bar1);
+    painter.drawImage(temp2,Bar2);*/
+    ui->label->setText(QString::number(P1.GetHP(),10));
+    ui->label_2->setText(QString::number(P1.GetMP(),10));
+    ui->label_3->setText(QString::number(P1.GetWeaponLv(),10));
+    ui->label_4->setText(QString::number(P1.GetMaterial(),10));
+    ui->label_5->setText(QString::number(P1.GetProcess(),10));
+    BarC[5]=Bar[0].copy(0,0,21,P1.GetHP()>300?300:P1.GetHP());
+    BarC[6]=Bar[1].copy(0,0,21,P1.GetMP()>300?300:P1.GetMP());
+    BarC[7]=Bar[2].copy(0,0,21,P1.GetWeaponLv()*9>300?300:P1.GetWeaponLv()*9);
+    BarC[8]=Bar[3].copy(0,0,21,P1.GetMaterial()>300?300:P1.GetMaterial());
+    BarC[9]=Bar[4].copy(0,0,21,P1.GetProcess()>300?300:P1.GetProcess());
+    BarC[0]=Bar[0].copy(21,0,21,300);
+    BarC[1]=Bar[1].copy(21,0,21,300);
+    BarC[2]=Bar[2].copy(21,0,21,300);
+    BarC[3]=Bar[3].copy(21,0,21,300);
+    BarC[4]=Bar[4].copy(21,0,21,300);
+    for(i=0;i<5;i++)
+    BarR[i].setRect(1500+(i*80),100,80,900);
+    BarR[5].setRect(1500,100,80,(P1.GetHP()>300?300:P1.GetHP())*3);
+    BarR[6].setRect(1580,100,80,(P1.GetMP()>300?300:P1.GetMP())*3);
+    BarR[7].setRect(1660,100,80,(P1.GetWeaponLv()*9>300?300:P1.GetWeaponLv())*9);
+    BarR[8].setRect(1740,100,80,(P1.GetMaterial()>300?300:P1.GetMaterial())*3);
+    BarR[9].setRect(1820,100,80,(P1.GetProcess()*3>300?300:P1.GetProcess())*9);
+    for(i=0;i<5;i++){
+        painter.drawImage(BarR[i],BarC[i]);
+        painter.drawImage(BarR[i+5],BarC[i+5]);
     }
 }
 
-    void BattleWindow::Enemy_Generate(){
-        int i,k,x,y;
+    void BattleWindow::Enemy_Generate(){//兵营生成敌人
+        int i,x,y;
         XY t1,t2={50,50};
         for(i=0;i<Edit_Max;i++){
-            if(object[i].GetType()!=5)continue;
+            if(object[i]->GetType()!=5||object[i]->GetAlive()==false)continue;
             x = QRandomGenerator::global()->generate();
             y = QRandomGenerator::global()->generate();
-                for(k=0;k<Edit_Max;k++){
-                if(enemy[k].GetAlive()==false){
-                    t1=object[i].GetPos();
-                   if(x%2==1)t1.x-=50;
-                   else t1.x+=50;
-                   if(y%2==1)t1.y-=50;
-                   else t1.y+=50;
-                new(&enemy[k])Enemy(t1,t2,2,10,20,2);break;}
-                }
+                t1=object[i]->GetPos();
+               if(x%2==1)t1.x-=50;
+               else t1.x+=50;
+               if(y%2==1)t1.y-=50;
+               else t1.y+=50;
+               switch (object[i]->GetSkin()) {
+               case 1:if(object[i]->GetOther()>=10){
+                   CreatePartical(object[i]->GetPos(),object[i]->GetArea(),Type::Object_Hit);
+                   object[i]->Dead();break;
+                   }
+                   object[i]->SetOther(object[i]->GetOther()+1);
+                   CreateEnemy(t1,t2,2,10,4,2);break;
+               case 2:if(object[i]->GetOther()>=15){
+                       CreatePartical(object[i]->GetPos(),object[i]->GetArea(),Type::Object_Hit);
+                       object[i]->Dead();break;
+                       }
+                       object[i]->SetOther(object[i]->GetOther()+1);CreateEnemy(t1,t2,10,10,4,3);break;
+               case 3:if(object[i]->GetOther()>=20){
+                       CreatePartical(object[i]->GetPos(),object[i]->GetArea(),Type::Object_Hit);
+                       object[i]->Dead();break;
+                       }
+                       object[i]->SetOther(object[i]->GetOther()+1);CreateEnemy(t1,t2,50,10,4,4);break;
+               default:break;
+               }
 
         }
     }
-    void BattleWindow::Player_Move(){
-          move.start(10);
+    void BattleWindow::Move(){//玩家移动
+        P1.Player_Move(P1.GetSpeed());Player_HitCheck();
     }
-    void BattleWindow::Move(){
-        P1.Player_Move(2);Player_HitCheck();
-    }
-    void BattleWindow::Enemy_All(){
+    void BattleWindow::Enemy_All(){//敌人其它判定
         int i;
-        for (i=0;i<Edit_Max ;i++ ) {if(enemy[i].GetAlive()==false)continue;
+        for (i=0;i<Edit_Max ;i++ ) {
+            if(enemy[i].GetAlive()==false)continue;
         int x = QRandomGenerator::global()->generate();
         if(x%6==0){
-           enemy[i].Enemy_RndChangeHead();
+            if(enemy[i].GetSkin()!=3||enemy[i].GetSkin()!=4){
+           enemy[i].Enemy_RndChangeHead();}
         }
         if(x%5==0)
             enemy[i].Enemy_B1Fire();
+
         }
+        int x = QRandomGenerator::global()->generate();
+        if(boss1->GetAlive()==true&&x%10==0)boss1->Boss1_B1Fire();
     }
-    void BattleWindow::keyPressEvent(QKeyEvent *event){
+
+      void BattleWindow::keyPressEvent(QKeyEvent *event){
+      //    qDebug()<<event->key();
         if(!event->isAutoRepeat()){
-            switch (event->key()) {
-                case Qt::Key_Left:
-                Player_Move();
-                P1.Player_ChangeHead(2);
-                    break;
-                case Qt::Key_Right:
-                Player_Move();
-                P1.Player_ChangeHead(3);
-                    break;
-                case Qt::Key_Up:
-                Player_Move();
-                P1.Player_ChangeHead(0);
-                    break;
-                case Qt::Key_Down:
-                Player_Move();
-                P1.Player_ChangeHead(1);
-                    break;
-                case Qt::Key_Space:
-                P1.Player_B1Fire();
-                    break;
+            if(event->key()==87||event->key()==83||event->key()==65||event->key()==68)Key=event->key();
+            switch (event->key()) {//wsad space
+            case 87:P1.Player_ChangeHead(0);move.start(10);break;
+            case 83:P1.Player_ChangeHead(1);move.start(10);break;
+            case 65:P1.Player_ChangeHead(2);move.start(10);break;
+            case 68:P1.Player_ChangeHead(3);move.start(10);break;
+            case 32://
+                switch (Skill) {
+                case 1:if(P1.Player_B1Fire()==false)Play_MPOut();break;
+                case 2:if(P1.Player_B2Fire()==false)Play_MPOut();break;
+                case 3:if(P1.Player_B3Fire()==true){
+                        XY a=P1.GetPos(),b={50,100},c={150,100},d={-50,50},e={100,50},f={100,150},g={50,-50};
+                        switch (P1.GetHead()) {
+                        case UP:CreatePartical(a-b,c,Type::Player_B3);break;
+                        case DOWN:CreatePartical(a+d,c,Type::Player_B3);break;
+                        case LEFT:CreatePartical(a-e,f,Type::Player_B3);break;
+                        case RIGHT:CreatePartical(a+g,f,Type::Player_B3);break;
+                        }
+                    }break;
+                }break;
+            case 74:
+                P1.Player_ProcessOn(-P1.GetProcess());
+                fix.start(10);
+                Fix_Mod=10;break;
+            case 75:
+                P1.Player_ProcessOn(-P1.GetProcess());
+                fix.start(100);
+                Fix_Mod=100;break;
+            case 76:
+                P1.Player_ProcessOn(-P1.GetProcess());
+                fix.start(300);
+                Fix_Mod=300;break;
+            case 16777248:Skill++;if(Skill==4){Skill=1;}break;
+            case 61:Win=true;MissionRougueLike_Win();break;//跳关
+            case 45:P1.Strengthen(10,10,0,0,0,0);break;
+            case 48:P1.Strengthen(0,0,10,0,0,0);break;
             }
          }
     }
-    void BattleWindow::keyReleaseEvent(QKeyEvent *event){
-        if(!event->isAutoRepeat()){
-        switch (event->key()) {
-            case Qt::Key_Left:
-                move.stop();
-                break;
-            case Qt::Key_Right:
-                move.stop();
-                break;
-            case Qt::Key_Up:
-                move.stop();
-                break;
-            case Qt::Key_Down:
-                move.stop();
-                break;
-        }
-        }
-    }
 
-    QImage BattleWindow::Image_Cut(QImage image)
-    {
+void BattleWindow::keyReleaseEvent(QKeyEvent *event){
+   if(!event->isAutoRepeat()){
+        if(event->key()==Key )move.stop();
+   }
+}
+
+QImage BattleWindow::Image_Cut(QImage image){
             image = image.convertToFormat(QImage::Format_ARGB32);
             union myrgb
             {
@@ -622,16 +789,16 @@ void BattleWindow::Enemy_Move(){
                 uchar rgba_bits[4];
             };
             myrgb* mybits =(myrgb*) image.bits();
-            int len = image.width()*image.height();
-            while(len --> 0)
-            {
-                mybits->rgba_bits[3] = (mybits->rgba== 0xFFFFFFFF)?0:255;
-                mybits++;
-            }
-            return image;
+     int len = image.width()*image.height();
+      while(len --> 0)
+      {
+        mybits->rgba_bits[3] = (mybits->rgba== 0xFFFFFFFF)?0:255;
+        mybits++;
+      }
+   return image;
 }
-    QImage BattleWindow::Image_Transparent(QImage image,int x)
-    {
+QImage BattleWindow::Image_Transparent(QImage image,int x){
+        if(x>255)x=255;
             image = image.convertToFormat(QImage::Format_ARGB32);
             union myrgb
             {
@@ -647,12 +814,129 @@ void BattleWindow::Enemy_Move(){
             }
             return image;
 }
-    void BattleWindow::Music_Introduce(){
 
-        QMediaPlayer *player123 = new QMediaPlayer;
-
-        player123->setMedia(QUrl::fromLocalFile(":/sounds/sounds/introduce.mp3"));
-
-        player123->setVolume(50);
-        player123->play();
+void BattleWindow::P1_Fix(){
+    if(P1.GetMaterial()<=0){
+        P1.Strengthen(0,0,0,-P1.GetMaterial(),0,0);
+        fix.stop();return;
     }
+    P1.Player_ProcessOn(1);
+    switch (Fix_Mod) {
+    case 100:P1.Strengthen(0,0,0,-1,0,0);break;
+    case 300:P1.Strengthen(0,0,0,-1,0,0);break;
+    case 10:break;
+    }
+    if(P1.GetProcess()>=100){
+        P1.Player_ProcessOn(-P1.GetProcess());
+        fix.stop();
+        switch (Fix_Mod) {
+        case 100:P1.Strengthen(0,100,0,0,0,0);break;
+        case 300:P1.Strengthen(0,0,1,0,0,0);break;
+        case 10:P1.Strengthen(1,0,0,-10,0,0);break;
+        }
+    }
+}
+void BattleWindow::Play_RedZone(){
+    if(RedZone_Sound->state()==QMediaPlayer::PlayingState){
+        RedZone_Sound->stop();
+        RedZone_Sound->setVolume(100);
+        RedZone_Sound->play();
+    }
+    RedZone_Sound->setVolume(100);
+    RedZone_Sound->play();
+}
+void BattleWindow::Play_PlayerHit(){
+    if(Bullet_Sound->state()==QMediaPlayer::PlayingState){
+        Bullet_Sound->stop();
+        Bullet_Sound->setVolume(50);
+        Bullet_Sound->play();
+    }
+    Bullet_Sound->setVolume(50);
+    Bullet_Sound->play();
+}
+void BattleWindow::Play_MPOut(){
+    if(MPOut->state()==QMediaPlayer::PlayingState){
+        MPOut->stop();
+        MPOut->setVolume(50);
+        MPOut->play();
+    }
+    MPOut->setVolume(50);
+    MPOut->play();
+}
+HEAD BattleWindow::AI1(XY player,XY enemy){
+    int d[5],i,n=0;
+    d[0]=(enemy.y-player.y)*(enemy.y-player.y)+(enemy.x-player.x)*(enemy.x-player.x);
+    d[1]=(enemy.y+10-player.y)*(enemy.y+10-player.y)+(enemy.x-player.x)*(enemy.x-player.x);
+    d[2]=(enemy.y-10-player.y)*(enemy.y-10-player.y)+(enemy.x-player.x)*(enemy.x-player.x);
+    d[3]=(enemy.y+-player.y)*(enemy.y-player.y)+(enemy.x-10-player.x)*(enemy.x-10-player.x);
+    d[4]=(enemy.y-player.y)*(enemy.y-player.y)+(enemy.x+10-player.x)*(enemy.x+10-player.x);
+    for(i=1;i<5;i++){
+            if(d[n]>d[i])n=i;
+    }
+    switch (n) {
+    case 2:return UP;break;
+    case 1:return DOWN;break;
+    case 3:return LEFT;break;
+    case 4:return RIGHT;break;
+    default:qDebug()<<"wrong";return UP;
+    }
+}
+void BattleWindow::CreatePartical(XY pos,XY area,Type type){
+    int i;
+    for(i=0;i<Edit_Max;i++){//创建爆炸粒子
+        if(partical[i].GetAlive()==true)continue;
+               new(&partical[i])Partical(pos,area,type);
+        break;
+    }//创建爆炸粒子
+}
+void BattleWindow::CreateEnemy(XY pos,XY area,int hp,int speed,int bulletspeed,int skin){
+    if(pos.x+area.x>X_Max||pos.y+area.y>Y_Max||pos.x<0||pos.y<0)return;
+    int i;
+    for(i=0;i<Edit_Max;i++){
+        if(enemy[i].GetAlive()==true)continue;
+        new(&enemy[i])Enemy(pos,area,hp,speed,bulletspeed,skin);break;
+    }
+}
+void BattleWindow::CreateObject(XY pos,XY area,int type,int skin,int hp){
+    if(type==0)return;
+    int i;
+    for(i=0;i<Edit_Max;i++){//创建物体
+        if(object[i]->GetAlive()==false){
+        object[i]->~Object();
+        break;
+        }
+
+    }//创建物体
+    switch (type) {
+    case 1:object[i]=new Wall(pos,area,skin,hp);break;
+    case 2:object[i]=new BedRock(pos,area,skin);break;
+    case 3:object[i]=new River(pos,area,skin);break;
+    case 4:object[i]=new Portal(pos,area);break;
+    case 5:object[i]=new Camp(pos,area,1,hp);break;
+    case 6:object[i]=new FirstAid(pos,area,1);break;
+    case 7:object[i]=new Weapon(pos,area,1);break;
+    case 8:object[i]=new Camp(pos,area,2,hp);break;
+    case 9:object[i]=new FirstAid(pos,area,2);break;
+    case 10:object[i]=new Weapon(pos,area,2);break;
+    case 11:object[i]=new Camp(pos,area,3,hp);break;
+    case 12:object[i]=new FirstAid(pos,area,3);break;
+    case 13:object[i]=new Weapon(pos,area,3);break;
+    case 14:object[i]=new Ruins(pos,area,skin);break;
+    case 15:object[i]=new Grass(pos,area,skin);break;
+    case 16:object[i]=new Nail(pos,area);break;
+    case 17:object[i]=new Ice(pos,area);break;
+    default:qDebug()<<"sonethings wrong..";break;
+    }
+}
+void BattleWindow::ClearMap(XY pos){//清理地图
+    int i;
+    for(i=0;i<Edit_Max;i++){
+        enemy[i].Dead();
+        if(object[i]->GetAlive())
+        object[i]->Dead();
+    }
+    P1.SetPos(pos);
+}
+int BattleWindow::RndLevel(int x){
+    return 1;
+}

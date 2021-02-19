@@ -13,11 +13,14 @@ void RedZone::Flash(){
     }
 }
 
+
+
 RedZone::RedZone(){Alive=false;}
 RedZone::RedZone(XY p,int r,int type){
-    pos=p;this->r=r;
-    this->type=type;
-    Alive=true;}
+     pos=p;this->r=r;
+     this->type=type;
+     Alive=true;
+}
 RedZone::~RedZone(){}
 bool RedZone::Object_Hit(XY p,XY s){//物体与圆形区域碰撞
     XY t1,t2,t3,t4;
@@ -31,8 +34,9 @@ bool RedZone::Object_Hit(XY p,XY s){//物体与圆形区域碰撞
         return false;
     }
 }
+
 bool RedZone::CircleFunction(XY p){//圆方程计算
-    if((p.x-pos.x)*(p.x-pos.x)+(p.y-pos.y)*(p.y-pos.y)<=r*r){   //检测是否碰撞
+    if((p.x-pos.x)*(p.x-pos.x)+(p.y-pos.y)*(p.y-pos.y)<=r*r){//检测是否碰撞
       return true;
     }else{
      return false;

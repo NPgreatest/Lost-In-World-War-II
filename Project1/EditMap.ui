@@ -6,9 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1600</width>
+    <width>2000</width>
     <height>1000</height>
    </rect>
+  </property>
+  <property name="cursor">
+   <cursorShape>ArrowCursor</cursorShape>
   </property>
   <property name="windowTitle">
    <string>地图编辑</string>
@@ -57,6 +60,465 @@
     </property>
     <property name="checked">
      <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="comboBox">
+    <property name="geometry">
+     <rect>
+      <x>1520</x>
+      <y>10</y>
+      <width>151</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="currentIndex">
+     <number>0</number>
+    </property>
+    <property name="maxVisibleItems">
+     <number>20</number>
+    </property>
+    <item>
+     <property name="text">
+      <string>橡皮擦</string>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>:/images/eraser.bmp</normaloff>:/images/eraser.bmp</iconset>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>房子</string>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>:/images/Wall1.png</normaloff>:/images/Wall1.png</iconset>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>基岩</string>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>:/images/BedRock1.png</normaloff>:/images/BedRock1.png</iconset>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>河</string>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>:/images/River1.jpg</normaloff>:/images/River1.jpg</iconset>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string extracomment="暂未开放">传送门</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>敌方兵营1</string>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>:/images/Camp1.jpg</normaloff>:/images/Camp1.jpg</iconset>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>急救包1</string>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>:/images/FirstAid1.png</normaloff>:/images/FirstAid1.png</iconset>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>武器箱1</string>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>:/images/Weapon1.png</normaloff>:/images/Weapon1.png</iconset>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>敌方兵营2</string>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>:/images/Camp2.jpg</normaloff>:/images/Camp2.jpg</iconset>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>急救包2</string>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>:/images/FirstAid2.png</normaloff>:/images/FirstAid2.png</iconset>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>武器箱2</string>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>:/images/Weapon2.png</normaloff>:/images/Weapon2.png</iconset>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>敌方兵营3</string>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>:/images/Camp3.jpg</normaloff>:/images/Camp3.jpg</iconset>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>急救包3</string>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>:/images/FirstAid3.png</normaloff>:/images/FirstAid3.png</iconset>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>武器箱3</string>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>:/images/Weapon3.png</normaloff>:/images/Weapon3.png</iconset>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>废墟</string>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>:/images/Ruins1.png</normaloff>:/images/Ruins1.png</iconset>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>丛林</string>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>:/images/Grass1.png</normaloff>:/images/Grass1.png</iconset>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>钉子</string>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>:/images/Nail.png</normaloff>:/images/Nail.png</iconset>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>冰</string>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>:/images/ice1.png</normaloff>:/images/ice1.png</iconset>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>敌人</string>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>:/images/EnemyDown_1.png</normaloff>:/images/EnemyDown_1.png</iconset>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>玩家</string>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>:/images/TankLeft.png</normaloff>:/images/TankLeft.png</iconset>
+     </property>
+    </item>
+   </widget>
+   <widget class="QCheckBox" name="checkBox_2">
+    <property name="geometry">
+     <rect>
+      <x>1510</x>
+      <y>677</y>
+      <width>73</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>背景</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>1520</x>
+      <y>40</y>
+      <width>91</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>默认长度：</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>1520</x>
+      <y>100</y>
+      <width>81</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>默认宽度：</string>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="spinBox_1">
+    <property name="geometry">
+     <rect>
+      <x>1600</x>
+      <y>50</y>
+      <width>151</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="prefix">
+     <string/>
+    </property>
+    <property name="minimum">
+     <number>10</number>
+    </property>
+    <property name="maximum">
+     <number>1000</number>
+    </property>
+    <property name="value">
+     <number>50</number>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="spinBox_2">
+    <property name="geometry">
+     <rect>
+      <x>1600</x>
+      <y>100</y>
+      <width>151</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="minimum">
+     <number>10</number>
+    </property>
+    <property name="maximum">
+     <number>1000</number>
+    </property>
+    <property name="value">
+     <number>50</number>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>1520</x>
+      <y>140</y>
+      <width>81</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>默认血量:</string>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="spinBox_3">
+    <property name="geometry">
+     <rect>
+      <x>1600</x>
+      <y>150</y>
+      <width>151</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="maximum">
+     <number>100</number>
+    </property>
+    <property name="value">
+     <number>2</number>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_4">
+    <property name="geometry">
+     <rect>
+      <x>1520</x>
+      <y>240</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>玩家血量:</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_5">
+    <property name="geometry">
+     <rect>
+      <x>1520</x>
+      <y>290</y>
+      <width>81</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>玩家能量：</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_6">
+    <property name="geometry">
+     <rect>
+      <x>1520</x>
+      <y>330</y>
+      <width>81</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>玩家等级：</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_7">
+    <property name="geometry">
+     <rect>
+      <x>1520</x>
+      <y>370</y>
+      <width>71</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>玩家材料：</string>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="spinBox_4">
+    <property name="geometry">
+     <rect>
+      <x>1600</x>
+      <y>240</y>
+      <width>161</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="minimum">
+     <number>1</number>
+    </property>
+    <property name="maximum">
+     <number>9999</number>
+    </property>
+    <property name="value">
+     <number>5</number>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="spinBox_5">
+    <property name="geometry">
+     <rect>
+      <x>1600</x>
+      <y>280</y>
+      <width>161</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="minimum">
+     <number>0</number>
+    </property>
+    <property name="maximum">
+     <number>9999</number>
+    </property>
+    <property name="value">
+     <number>5</number>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="spinBox_6">
+    <property name="geometry">
+     <rect>
+      <x>1600</x>
+      <y>320</y>
+      <width>161</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="minimum">
+     <number>1</number>
+    </property>
+    <property name="maximum">
+     <number>9999</number>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="spinBox_7">
+    <property name="geometry">
+     <rect>
+      <x>1600</x>
+      <y>360</y>
+      <width>161</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="maximum">
+     <number>9999</number>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_8">
+    <property name="geometry">
+     <rect>
+      <x>1520</x>
+      <y>190</y>
+      <width>81</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>默认皮肤:</string>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="spinBox">
+    <property name="geometry">
+     <rect>
+      <x>1600</x>
+      <y>190</y>
+      <width>151</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="minimum">
+     <number>1</number>
+    </property>
+    <property name="maximum">
+     <number>9999</number>
+    </property>
+   </widget>
+   <widget class="QDial" name="dial">
+    <property name="geometry">
+     <rect>
+      <x>1540</x>
+      <y>570</y>
+      <width>81</width>
+      <height>91</height>
+     </rect>
     </property>
    </widget>
   </widget>

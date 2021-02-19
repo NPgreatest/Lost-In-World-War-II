@@ -5,21 +5,18 @@
 #include<QtDebug>
 Enemy::Enemy(XY p,XY area,int hp,int speed,int bullet_speed,int skin)
 {
-    this->pos=p;HP=hp;MP=100;this->a=area;this->skin=skin;
+    this->pos=p;HP=hp;this->a=area;this->skin=skin;
     B1Speed=bullet_speed;this->speed=speed;
-    WeapenLv=1;head=UP;alive=true;
-}
-void Enemy::Flash(){
-    flash++;
-    if(flash>5)flash=-1;
+    head=UP;alive=true;
 }
 Enemy::Enemy()
 {
-    pos.x=0;pos.y=0;HP=100;MP=100;skin=1;
+    pos.x=0;pos.y=0;HP=100;skin=1;
     a.x=50;a.y=50;speed=5;B1Speed=10;
-    WeapenLv=1;head=UP;alive=false;
+    head=UP;alive=false;
 }
 void Enemy::Enemy_Move(int step){
+    if(this->slow==true&&step>0){step+=5;}
     switch (head){
         case UP:pos.y-=step;break;
         case DOWN:pos.y+=step;break;
@@ -49,9 +46,6 @@ void Enemy::Enemy_UnderAttack(int damage){
     HP-=damage;
     if(HP<0){
         alive=false;
-     //   pos.x=-10000;
-     //   pos.y=-10000;
-       // a.x=1;a.y=1;
     }
 }
 
@@ -59,7 +53,7 @@ void Enemy::Enemy_B1Fire(){
 int i;
 for(i=0;i<5;i++){
 if(B1[i].GetAlive()==false){
-    B1[i].Init(pos,WeapenLv,head);
+    B1[i].Init(pos,1,head);
     return;
 }
 }

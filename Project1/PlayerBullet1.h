@@ -4,7 +4,7 @@
 class PlayerBullet1{
 private:
     int level;
-    XY a;
+    XY area;
     HEAD head;
     XY pos;
     bool alive=false;
@@ -17,7 +17,7 @@ public:
     XY GetPos(){return pos;}
     HEAD GetHead(){return head;}
     bool GetAlive(){return alive;}
-    void PlayerBullet1_Dead();
+    void PlayerBullet1_Dead(){this->alive=false;pos.x=-1000;pos.y=-1000;}
 };
 
 #endif // PLAYERBULLET1_H

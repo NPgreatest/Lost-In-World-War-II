@@ -4,6 +4,7 @@ QT       += multimedia
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++11
+CONFIG += resources_big
 
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
@@ -11,25 +12,35 @@ CONFIG += c++11
 
 SOURCES += \
     BattleWindow.cpp \
+    BattleWindow_Introduce.cpp \
+    BattleWindow_Mission.cpp \
+    Boss1.cpp \
     EditMap.cpp \
     Enemy.cpp \
     Object.cpp \
+    Partical.cpp \
     Player.cpp \
     PlayerBullet1.cpp \
+    PlayerBullet2.cpp \
     RedZone.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    playerbullet3.cpp
 
 HEADERS += \
     All.h \
     BattleWindow.h \
+    Boss1.h \
     EditMap.h \
     Enemy.h \
     Object.h \
+    Partical.h \
     Player.h \
     PlayerBullet1.h \
+    PlayerBullet2.h \
     RedZone.h \
-    mainwindow.h
+    mainwindow.h \
+    playerbullet3.h
 
 FORMS += \
     BattleWindow.ui \
