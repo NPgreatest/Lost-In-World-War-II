@@ -35,19 +35,9 @@ class BattleWindow : public QMainWindow
 public:
     BattleWindow(QWidget *parent = nullptr);
     ~BattleWindow();
-void Load_Map(QString Address);
 void Load_Status(int Mission);
-void Load_Introduce();
-QImage Image_Cut(QImage image);
-QImage Image_Transparent(QImage image,int x);
-void RedZoneBoom(int x);
-void drawIntroduce(QPainter &painter);
-void drawBar(QPainter &painter);
-void Play_RedZone();
-void Play_PlayerHit();
-void Play_MPOut();
-void Play_BackMusic();
 private slots:
+void RainFire();
 void Boss_Move();
 void Move();
 void bulletfly();//让子弹飞
@@ -99,18 +89,21 @@ private:
     XY boom[Edit_Max];
     QTimer move;
     QTimer fix;
+    QTimer Rain;
     bool press=false;
 
     QMediaPlayer *Bullet_Sound = new QMediaPlayer;
     QMediaPlayer *RedZone_Sound=new QMediaPlayer;
     QMediaPlayer *BackGroundMusic = new QMediaPlayer;
     QMediaPlayer *MPOut = new QMediaPlayer;
+    QMediaPlayer *Bullet_Sound_2= new QMediaPlayer;
 
 
 
     HEAD AI1(XY player,XY enemy);
     void keyPressEvent(QKeyEvent *event);
     void keyReleaseEvent(QKeyEvent *event);
+    void mousePressEvent(QMouseEvent *a){XY t={a->x(),a->y()};CreateRedZone(t,500,1);}
     void MissionTeach();
     void MissionRougueLike();
     void MissionRougueLike_Win();
@@ -120,7 +113,21 @@ private:
     void CreatePartical(XY pos,XY area,Type type);
     void CreateEnemy(XY pos,XY area,int hp,int speed,int bulletspeed,int skin);
     void CreateObject(XY pos,XY area,int type,int skin,int hp);
+    void CreateRedZone(XY pos,int R,int type);
     void ClearMap(XY pos);
     void Mist_Generate();
+    void MissionTechEnd();
+    void Load_Introduce();
+    QImage Image_Cut(QImage image);
+    QImage Image_Transparent(QImage image,int x);
+    void RedZoneBoom(int x);
+    void drawIntroduce(QPainter &painter);
+    void drawBar(QPainter &painter);
+    void Play_RedZone();
+    void Play_PlayerHit();
+    void Play_PlayerHit_2();
+    void Play_MPOut();
+    void Play_BackMusic();
+    void Load_Map(QString Address);
 };
 #endif // BATTLEWINDOW_H

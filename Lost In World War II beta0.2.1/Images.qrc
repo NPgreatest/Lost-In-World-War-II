@@ -24,7 +24,6 @@
         <file>Images/Images/select.jpg</file>
         <file>Images/Images/SkillSelect.png</file>
         <file>Images/Images/title.png</file>
-        <file>Images/Mission/Dialog.jpg</file>
         <file>Images/Object/BedRock1.png</file>
         <file>Images/Object/BedRock2.png</file>
         <file>Images/Object/Camp1.jpg</file>
@@ -61,11 +60,6 @@
         <file>Images/Particals/Mist3.png</file>
         <file>Images/Particals/Mist4.png</file>
         <file>Images/Particals/Mist5.png</file>
-        <file>Images/Particals/Mist6.png</file>
-        <file>Images/Particals/Mist7.png</file>
-        <file>Images/Particals/Mist8.png</file>
-        <file>Images/Particals/Mist9.png</file>
-        <file>Images/Particals/Mist10.png</file>
         <file>Images/Particals/Shot3_1.png</file>
         <file>Images/Particals/Shot3_2.png</file>
         <file>Images/Particals/Shot3_3.png</file>
@@ -142,5 +136,12 @@
         <file>Images/Mission/Dialog6.jpg</file>
         <file>Images/Mission/Dialog7.jpg</file>
         <file>Images/Mission/Dialog8.jpg</file>
+        <file>Images/Mission/Dialog8 _1.jpg</file>
+        <file>Images/Mission/Dialog8 _2.jpg</file>
+        <file>Images/Mission/Dialog8 _3.jpg</file>
+        <file>Images/Mission/Dialog8 _4.jpg</file>
+        <file>Images/Mission/Dialog8 _5.jpg</file>
+        <file>Images/Mission/Dialog8 _6.jpg</file>
+        <file>Images/Mission/Dialog8_0.jpg</file>
     </qresource>
 </RCC>

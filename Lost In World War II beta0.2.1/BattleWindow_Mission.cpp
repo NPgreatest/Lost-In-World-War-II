@@ -52,12 +52,13 @@ void BattleWindow::MissionTeach(){
    CreatePartical(dialog,dialog_Rect,Type::Dialog1);
 }
 void BattleWindow::MissionTeach_Win(){
-    LevelB++;
+    if(LevelB==3||LevelB==4)return;
+        LevelB++;
     switch (LevelB) {
     case 2:{XY temp={100,950};ClearMap(temp);Load_Map(":/maps/maps/1_2.txt");
         Total_Time=0;Process=0; break;}
-    case 3:{XY temp={0,450};ClearMap(temp);Load_Map(":/maps/maps/1_3.txt");
-      Total_Time=0;Process=0;  break;}
+    case 3:{XY temp={300,450};ClearMap(temp);Load_Map(":/maps/maps/1_3.txt");
+      Total_Time=0;Process=0;break;}
     }
 }
 void BattleWindow::MissionTick(int Mission){
@@ -81,16 +82,16 @@ void BattleWindow::MissionTick(int Mission){
         if(P1.GetPos().x>950&&Process==3){
             Process++;
             XY t={1300,500};
-            new(&redzone[0])RedZone(t,100,1);
-            redzone[0].Flash_Begin();
+            CreateRedZone(t,100,1);
             CreatePartical(t1,t2,Type::Dialog5);
         }break;}
+        break;
     case 2:
         if(Process==0){
             Process++;
             CreatePartical(t1,t2,Type::Dialog6);
         }
-        if(P1.GetPos().x>350&&Process==1){
+        if(P1.GetPos().x>550&&Process==1){
             Process++;
             CreatePartical(t1,t2,Type::Dialog7);
         }
@@ -100,7 +101,48 @@ void BattleWindow::MissionTick(int Mission){
             Process++;
             CreatePartical(t1,t2,Type::Dialog8);
         }
+        if(Total_Time==5){
+            Rain.start(100);
+        }
+        if(Total_Time==22){
+            LevelB++;
+            XY temp={0,450};
+            ClearMap(temp);
+            Load_Map(":/maps/maps/1_4.txt");
+            Total_Time=0;
+            Process=0;
+        }
+        break;
+    case 4:
+        if(Process==0&&Total_Time==5){
+            Load_Map(":/maps/maps/1_5.txt");
+            Load_Map(":/maps/maps/1_5.txt");
+        }
+        if(Process==0&&Total_Time==10){
+            Load_Map(":/maps/maps/1_6.txt");
+        }
+        if(Process==0&&Total_Time==15){
+            P1.Strengthen(-P1.GetHP()+100,0,0,0,0,0);
+        }
+        if(Process==0&&Total_Time==20){
+            P1.Strengthen(-P1.GetHP()-100,0,0,0,0,0);
+        }
+        if(Process==1&&Total_Time>=10){
+            QMessageBox::information(nullptr,tr("提示"),tr("新手任务结束"), tr("好"));
+            this->~BattleWindow();backto=new MainWindow;
+            backto->setMouseTracking(true);backto->show();
+        }
+        break;
     }
 
 
+}
+void BattleWindow::MissionTechEnd(){
+    LevelB=4;
+    Total_Time=0;
+    Process=1;
+    XY t={0,0},t2={2000,1000};
+    P1.Strengthen(100000,0,0,0,0,0);
+    ClearMap(t);
+    CreatePartical(t,t2,Type::DialogEnd);
 }

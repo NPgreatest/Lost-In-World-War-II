@@ -13,6 +13,7 @@ CONFIG += resources_big
 SOURCES += \
     BattleWindow.cpp \
     BattleWindow_Introduce.cpp \
+    BattleWindow_MainFun.cpp \
     BattleWindow_Mission.cpp \
     Boss1.cpp \
     EditMap.cpp \

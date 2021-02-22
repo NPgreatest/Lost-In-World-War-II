@@ -16,6 +16,7 @@ void PlayerBullet3::Flash(){
     if(flash!=0)
         flash++;
     if(flash>=10){
-        flash=0;Alive=false;
+        flash=0;
+        Alive=false;
     }
 }

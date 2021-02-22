@@ -271,17 +271,17 @@ if(QuitR.contains(ev->pos())==true){
 }
 }else if(Main_Mod==1){
     if(Mission_R[0].contains(ev->pos())==true){
-        QMessageBox::information(nullptr,tr("提示"),tr("坦克移动:WSAD\n更换武器:LShift\n作弊：按 - 增加HP、MP\n      按 = 跳关\n"), tr("好"));
+    //    QMessageBox::information(nullptr,tr("提示"),tr("坦克移动:WSAD\n更换武器:LShift\n作弊：按 - 增加HP、MP\n      按 = 跳关\n"), tr("好"));
           Battle=new BattleWindow;
           Battle->show();
-          Battle->Load_Status(2);
+          Battle->Load_Status(1);
           this->~MainWindow();p->~QMediaPlayer();
           return;
     }
     else if(Mission_R[1].contains(ev->pos())==true){
         Battle=new BattleWindow;
         Battle->show();
-        Battle->Load_Status(1);
+        Battle->Load_Status(2);
         this->~MainWindow();p->~QMediaPlayer();
         return;
     }

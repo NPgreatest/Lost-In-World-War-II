@@ -17,7 +17,7 @@ public:
     XY GetPos(){return pos;}
     XY GetArea(){return area;}
     bool GetAlive(){return Alive;}
-    void PlayerBullet3_Dead(){this->Alive=false;pos.x=-1000;pos.y=-1000;flash=0;}
+    void PlayerBullet3_Dead(){pos.x=-1000;pos.y=-1000;}
     int GetFlash(){return flash;}
     void Flash();
 };

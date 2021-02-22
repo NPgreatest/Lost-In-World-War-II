@@ -1,7 +1,6 @@
 <RCC>
     <qresource prefix="/sounds">
         <file>sounds/Begin.mp3</file>
-        <file>sounds/Die.mp3</file>
         <file>sounds/Introduce_1.mp3</file>
         <file>sounds/Introduce_2.mp3</file>
         <file>sounds/Introduce_3.mp3</file>

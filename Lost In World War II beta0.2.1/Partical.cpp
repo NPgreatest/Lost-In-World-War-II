@@ -22,6 +22,7 @@ Partical::Partical(XY p,XY a,Type type)
     case Dialog6:MeImage.load(":/Images/Mission/Dialog6.jpg");flash_max=60;break;
     case Dialog7:MeImage.load(":/Images/Mission/Dialog7.jpg");flash_max=60;break;
     case Dialog8:MeImage.load(":/Images/Mission/Dialog8.jpg");flash_max=60;break;
+    case DialogEnd:MeImage.load(":/Images/Mission/Dialog8_0.jpg");flash_max=200;break;
     }//6475
 }
 void Partical::FLash(){
@@ -79,6 +80,16 @@ void Partical::FLash(){
     case Dialog6:
     case Dialog7:
     case Dialog8:MeImage=Image_Transparent(MeImage,this->flash>20?382-6*flash:20*flash);break;
+    case DialogEnd:
+        switch (flash) {
+        case 20:MeImage.load(":/Images/Mission/Dialog8 _1.jpg");break;
+        case 40:MeImage.load(":/Images/Mission/Dialog8 _2.jpg");break;
+        case 60:MeImage.load(":/Images/Mission/Dialog8 _3.jpg");break;
+        case 80:MeImage.load(":/Images/Mission/Dialog8 _4.jpg");break;
+        case 100:MeImage.load(":/Images/Mission/Dialog8 _5.jpg");break;
+        case 120:MeImage.load(":/Images/Mission/Dialog8 _6.jpg");break;
+        }
+        break;
     }
 
 }

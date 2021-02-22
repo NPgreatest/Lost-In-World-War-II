@@ -4,6 +4,9 @@
         <file>maps/1_1.txt</file>
         <file>maps/1_2.txt</file>
         <file>maps/1_3.txt</file>
+        <file>maps/1_4.txt</file>
+        <file>maps/1_6.txt</file>
+        <file>maps/1_5.txt</file>
     </qresource>
     <qresource prefix="/RougeLike">
         <file>RougeLike/1_1_0.txt</file>

@@ -8,7 +8,7 @@
 enum HEAD{
     UP,DOWN,LEFT,RIGHT
 };
-enum Type{Object_Hit,Player_B3,Player_Damage,Mist,Dialog1,Dialog2,Dialog3,Dialog4,Dialog5,Dialog6,Dialog7,Dialog8,
+enum Type{Object_Hit,Player_B3,Player_Damage,Mist,Dialog1,Dialog2,Dialog3,Dialog4,Dialog5,Dialog6,Dialog7,Dialog8,DialogEnd
 
 };
 struct XY{
