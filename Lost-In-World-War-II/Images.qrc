@@ -26,9 +26,7 @@
         <file>Images/Object/Grass2.png</file>
         <file>Images/Object/Nail1.png</file>
         <file>Images/Object/Nail2.png</file>
-        <file>Images/Object/River1.jpg</file>
         <file>Images/Object/River1_2.jpg</file>
-        <file>Images/Object/River2.jpg</file>
         <file>Images/Object/River2_2.jpg</file>
         <file>Images/Object/Ruins1.png</file>
         <file>Images/Object/Wall1.png</file>
@@ -204,5 +202,8 @@
         <file>Images/Particals/Mist7.png</file>
         <file>Images/Particals/Mist8.png</file>
         <file>Images/Particals/Mist9.png</file>
+        <file>Images/Object/River1.png</file>
+        <file>Images/Object/River2.png</file>
+        <file>Images/Images/cursor.png</file>
     </qresource>
 </RCC>

@@ -46,9 +46,11 @@ enum Type{Object_Hit=1,
           Boss_Fire_D=19,
           Explotion=20
 };
+
 enum SkillName{
     MainWeapon,SubWeapon,Fire
 };
+
 enum Message{
     Load_Object=INT_MAX,
     Load_Partical=INT_MIN,
@@ -88,6 +90,7 @@ struct Object_Sql{
     Object_Sql(){}
     Object_Sql(QRect MeRect,int type,int Status):MeRect(MeRect),type(type),Status(Status){}
 };
+
 struct Partical_Sql{
     QRect MeRect;
     Type type;
@@ -103,6 +106,7 @@ struct Enemy_Sql{
     Enemy_Sql(QRect MeRect,HEAD head,int type)
               :MeRect(MeRect),type(type),head(head){}
 };
+
 struct Settings{
     public:
     int gamemode;

@@ -23,21 +23,21 @@ void BattleWindow::Flash(){//1秒刷新一次
     MissionTick();
 
     for(i=0;i<OBJECT_NUMBER;i++){//物体动画
-        if(!object[i]->GetAlive())continue;
+        if(!object[i]->GetAlive()) continue;
         object[i]->Flash();
         for(j=0;j<PLAYER_NUMBER_MAX;j++){
             if(!P1[j].GetActivate()) continue;
         if(object[i]->GetType()==10&&P1[j].GetRect().intersects(object[i]->GetRect())&&object[i]->GetOther()==1){//地刺
-            P1[j].Player_UnderAttack(1);
+            P1[j].Player_UnderAttack(1,settings.gamemode==0?true:false);
             object[i]->Flash();
             CreatePartical(P1[j].GetRect(),Type::Player_Damage);//地刺
-        }
+            }
         }
     }
 
 
     for(i=0;i<ENEMY_NUMBER;i++){//敌人AI
-        if(enemy[i].GetAlive()==false)continue;
+        if(!enemy[i].GetAlive())continue;
         if(enemy[i].GetSkin()==2||enemy[i].GetSkin()==3||enemy[i].GetSkin()==4){
             enemy[i].Enemy_ChangeHead(AI1(P1[0].GetRect(),enemy[i].GetRect()));
         }
@@ -61,8 +61,11 @@ void BattleWindow::Flash(){//1秒刷新一次
      for(i=0;i<PLAYER_NUMBER_MAX;i++){
         if(!P1[i].GetActivate())continue;
          if(P1[i].GetHP()<0){
-            P1[i].Player_Dead();
-            CreatePlayer(i==0?QRect(500,500,40,40):P1[0].GetRect().adjusted(-50,0,-50,0),5,1);
+             this->~BattleWindow();
+             backto=new MainWindow();
+             backto->show();
+             QMessageBox::information(nullptr,tr("提示"),tr("您失败了"), tr("好"));
+             return;
          }
      }
 
@@ -134,7 +137,7 @@ void BattleWindow::RedZoneBoom(int x){//轰炸区实现
     for(i=0;i<PLAYER_NUMBER_MAX;i++){
         if(!P1[i].GetActivate()) continue;
         if(redzone[x].Object_Hit(P1[i].GetRect())){
-            P1[i].Player_UnderAttack(100);
+            P1[i].Player_UnderAttack(100,settings.gamemode==0?true:false);
         }
     }
 }//轰炸区实现
@@ -160,6 +163,7 @@ void BattleWindow::Bullet_Fly(){//子弹
 
 
 void BattleWindow::Player_HitCheck(int k){
+    bool slow=false;
     if(P1[k].GetRect().x()<-500||P1[k].GetRect().y()>Y_Max+500||P1[k].GetRect().y()<-500||P1[k].GetRect().x()-500>X_Max)return;
     int i;
     if(P1[k].GetRect().x()<0||P1[k].GetRect().y()+40>Y_Max||P1[k].GetRect().y()<0||P1[k].GetRect().x()+40>X_Max){//玩家边界判断
@@ -168,6 +172,7 @@ void BattleWindow::Player_HitCheck(int k){
     }//玩家边界判断
     for(i=0;i<OBJECT_NUMBER;i++){//墙判断
         if(!object[i]->GetAlive())continue;
+
         if(P1[k].GetRect().intersects(object[i]->GetRect())&&object[i]->Contact()){
             switch (object[i]->GetType()) {
             case 4:MissionRougueLike_Win();break;//传送门功能
@@ -183,7 +188,7 @@ void BattleWindow::Player_HitCheck(int k){
                 case 3:P1[k].Strengthen(0,300,1,0);return;
 
             }break;
-            case 11:P1[k].Player_Slow();break;
+            case 11:P1[k].Player_Slow();slow=true;break;
             case 10:
                 if(object[i]->GetOther()==0)break;
                 P1[k].Player_UnderAttack(1);
@@ -191,11 +196,12 @@ void BattleWindow::Player_HitCheck(int k){
                 object[i]->Flash();
                 break;
             default:
-                P1[k].Player_Move(-3);
+                P1[k].Player_Move(-1);
                 Player_HitCheck(k);break;
             }
         }
     }//墙end
+    if(P1[k].GetChoose()==0&& !slow) P1[k].Player_UnSlow();
 
 }//dunction end
 
@@ -211,14 +217,11 @@ void BattleWindow::Boss_Move(){
     for(i=0;i<OBJECT_NUMBER;i++){
         if(object[i]->GetAlive()==false)continue;
 
-    b:    if(boss1->GetRect().intersects(object[i]->GetRect())){
-            switch (object[i]->GetType()){
-            case 2:boss1->Boss1_Move(-1);hit=true;goto b;break;
-            default: object[i]->Dead();CreatePartical(object[i]->GetRect(),Type::Object_Hit);break;
-            }
+        if(boss1->GetRect().intersects(object[i]->GetRect())){
+             object[i]->Dead();CreatePartical(object[i]->GetRect(),Type::Object_Hit);
         }
     }
-    if(hit )boss1->Boss1_RndChangeHead();
+    if(hit)boss1->Boss1_RndChangeHead();
 }
 
 
@@ -227,12 +230,22 @@ void BattleWindow::Enemy_Move(){
 
     for(i=0;i<ENEMY_NUMBER;i++){
         bool ice=false,hit=false;
-        if(!enemy[i].GetAlive())continue;//敌人死了就跳出
+        if(!enemy[i].GetAlive()) continue;//敌人死了就跳出
+
+
 
         enemy[i].Enemy_Move(enemy[i].GetMoveSpeed());//敌人移动
 
         a:if(enemy[i].GetRect().x()<0||enemy[i].GetRect().x()+enemy[i].GetRect().width()>X_Max||  //边界碰撞
           enemy[i].GetRect().y()<0||enemy[i].GetRect().y()+enemy[i].GetRect().height()>Y_Max){//边界碰撞
+
+            if(enemy[i].GetRect().x()<-50||enemy[i].GetRect().x()+enemy[i].GetRect().width()>X_Max+50||  //bug检测
+                      enemy[i].GetRect().y()<-50||enemy[i].GetRect().y()+enemy[i].GetRect().height()>Y_Max+50){
+                enemy[i].Dead();
+                continue;
+            }
+
+
             enemy[i].Enemy_Move(-1);
             hit=true;
             goto a;
@@ -318,27 +331,30 @@ void BattleWindow::P1_Weapon(){//技能
     int i;
     for(i=0;i<PLAYER_NUMBER_MAX;i++){
         if(!P1[i].GetActivate())continue;
+
     switch (P1[i].GetChoose()) {
     case 0:
         if(P1[i].GetProcess()<100)
         P1[i].Player_ProcessOn(1);
         break;
     case 1:
+        if(settings.gamemode==0)return;
         P1[i].Player_ProcessOn(-1);
         if(P1[i].GetProcess()<=0){
             P1[i].SetChoose(0);
             P1[i].Player_UnSlow();
         }
         break;
-    case 2:
-        P1[i].Player_ProcessOn(-100);
-        P1[i].SetChoose(0);
+  //  case 2:
+  //      P1[i].Player_ProcessOn(-100);
+  //      P1[i].SetChoose(0);
     default:break;
     }
     P1[i].Strengthen(0,2,0,0);
     if(P1[i].GetMP()>=100){
         P1[i].Strengthen(0,100-P1[i].GetMP(),0,0);
     }
+
     }
 }
 
@@ -458,6 +474,7 @@ void BattleWindow::Command(QString command){
                                                      "/skip 跳到的关卡\n"
                                                      "/Str HP MP 武器等级 速度\n"
                                                      "/help 帮助\n"
+                                                     "/gamemode 游戏模式(0为无敌)"
                                                      "CPlayer x坐标 y坐标 血量 武器等级 速度"), tr("好"));
         return;
     }
@@ -466,6 +483,7 @@ void BattleWindow::Command(QString command){
     if(command[0]=="/"){
         command.replace(0,1," ");
         commandlist=command.split(" ");
+        if(commandlist[1]==nullptr)return;
         if(commandlist[1]=="CreatePartical"){
             mode=1;
         }
@@ -489,6 +507,9 @@ void BattleWindow::Command(QString command){
         }
         if(commandlist[1]=="CPlayer"){
             mode=8;
+        }
+        if(commandlist[1]=="gamemode"){
+            mode=9;
         }
     }else{
         QMessageBox::information(nullptr,tr("帮助"),tr("指令错误"), tr("好"));
@@ -536,6 +557,8 @@ void BattleWindow::Command(QString command){
     case 8:
 
             break;
+    case 9:
+        settings.gamemode=commandlist[2].toInt(nullptr,10);
         }
     }
 

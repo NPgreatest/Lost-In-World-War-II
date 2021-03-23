@@ -26,7 +26,7 @@ public:
     int GetStatus(){return this->Status;}
     virtual void SetStatue(int x){this->Status=x;}//传输数据时状态对应图片
     QRect& GetRect(){return MeRect;}
-    QImage& GetImage(){return MeImage;}
+    virtual QImage& GetImage(){return MeImage;}
     void Dead(){Alive=false;this->MeRect.adjust(-100,-100,-100,-100);}
 };
 
@@ -34,6 +34,7 @@ class Temp:public Object{
 public:
     Temp():Object(){Alive=false;}
     virtual bool Hit(){return false;}
+    virtual void Flash() {}
     virtual bool Contact(){return false;}
     virtual ~Temp(){}
 };
@@ -44,6 +45,7 @@ private:
 public:
     Wall(QRect MeRect,int skin,int HP);
     virtual bool Hit();
+    virtual void Flash() {}
     virtual bool Contact(){return true;}
     virtual void SetStatue(int x);//传输数据时状态对应图片
     int GetHP(){return HP;}
@@ -63,6 +65,7 @@ public:
 class River:public Object{
 private:
     int flash;
+    QImage Backup;
 public:
     River(QRect MeRect,int skin);
     virtual bool Hit(){return false;}
@@ -70,6 +73,7 @@ public:
     virtual void SetStatue(int x);//传输数据时状态对应图片
     virtual bool Contact(){return true;}
     virtual ~River(){}
+    virtual QImage& GetImage(){if(flash==1)return MeImage;else return Backup;}
 };
 class Portal:public Object{
 private:
@@ -88,6 +92,7 @@ private:
 public:
     Camp(QRect MeRect,int skin,int HP);
     virtual bool Hit();
+    virtual void Flash() {}
     virtual bool Contact(){return true;}
     virtual int GetOther(){return Remain;}
     virtual void SetOther();
@@ -106,6 +111,7 @@ class Weapon:public Object{
 public:
     Weapon(QRect MeRect,int skin);
     virtual bool Hit(){return false;}
+    virtual void Flash() {}
     virtual bool Contact(){this->Dead();return true;}
     virtual void SetStatue(int x);//传输数据时状态对应图片
     virtual ~Weapon(){}
@@ -114,6 +120,7 @@ class Ruins:public Object{
 public:
     Ruins(QRect MeRect,int skin);
     virtual bool Hit(){return false;}
+    virtual void Flash() {}
     virtual bool Contact(){Alive=false;return false;}
     virtual ~Ruins(){}
 };
@@ -121,6 +128,7 @@ class Grass:public Object{
 public:
     Grass(QRect MeRect,int skin);
     virtual bool Hit(){return false;}
+    virtual void Flash() {}
     virtual bool Contact(){return false;}
     virtual ~Grass(){}
 };
@@ -136,13 +144,16 @@ public:
     virtual void SetStatue(int x);//传输数据时状态对应图片
     virtual ~Nail(){}
 };
+
 class Ice:public Object{
 private:
     int flash;
+    QImage Backup;
 public:
     Ice(QRect MeRect);
     virtual bool Hit(){return false;}
     virtual bool Contact(){return true;}
+    virtual QImage& GetImage(){if(flash==1)return MeImage;else return Backup;}
     virtual void SetStatue(int x);//传输数据时状态对应图片
     virtual void Flash();
     virtual ~Ice(){}

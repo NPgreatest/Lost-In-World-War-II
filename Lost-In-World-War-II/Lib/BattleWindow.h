@@ -55,6 +55,7 @@ public:
     void paint(QPainter *painter, QPaintEvent *event) ;//OpenGl实现
 
 private slots:
+
 void RainFire();//随机生成轰炸区
 
 void Boss_Move();//Boss TImer移动
@@ -126,9 +127,7 @@ private:
 
     PlayerBullet2 *bullet2=new PlayerBullet2[PLAYER_B2_NUMBER];
 
-    //Sql
-
-    //Sql
+    GLWidGet *openGL = new GLWidGet(this, this);
 
     Bar *bar[3];//槽
 
@@ -234,9 +233,7 @@ private:
 
     void Player_HitCheck(int x);//玩家碰撞检测
 
-    void Bullet_Dead(int number);
-
-    void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
+    void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE ;
     void keyReleaseEvent(QKeyEvent *event) Q_DECL_OVERRIDE ;
     void mousePressEvent(QMouseEvent *a) Q_DECL_OVERRIDE ;
     void mouseMoveEvent(QMouseEvent *ev) Q_DECL_OVERRIDE ;

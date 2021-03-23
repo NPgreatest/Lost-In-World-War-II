@@ -12,12 +12,12 @@ class GLWidGet: public QOpenGLWidget
 
 public:
     GLWidGet(BattleWindow *battlewindow, QWidget *parent);
-
+    ~GLWidGet(){}
 public slots:
     void animate();
 
 protected:
-    void paintEvent(QPaintEvent *event) override;
+    void paintEvent(QPaintEvent *event) override ;
 
 private:
     BattleWindow *battlewindow;

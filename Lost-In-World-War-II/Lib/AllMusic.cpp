@@ -1,5 +1,5 @@
 #include "AllMusic.h"
-
+#include<QDebug>
 AllMusic::AllMusic()
 {
     BackMuisc.setMedia(QUrl("qrc:/sounds/sounds/BattleMusic1.mp3"));
@@ -7,9 +7,10 @@ AllMusic::AllMusic()
 }
 
 AllMusic::~AllMusic(){
-    delete HitMusic;
-    delete Hit2Music;
-    delete RedZoneMusic;
+    delete [] HitMusic;
+    delete [] Hit2Music;
+    delete [] RedZoneMusic;
+    qDebug()<<"release free";
 }
 
 void AllMusic::PlayBackMusic(int x){

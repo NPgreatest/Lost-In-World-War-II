@@ -5,10 +5,9 @@
 #include<QDebug>
 #include<QRandomGenerator>
 
-MainWindow::MainWindow(QWidget *parent,int begin)
+MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
-{
+    , ui(new Ui::MainWindow){
 
     int i;
     QTimer *tick=new QTimer(this);
@@ -17,8 +16,6 @@ MainWindow::MainWindow(QWidget *parent,int begin)
     connect(&Flash,  SIGNAL(timeout()), this, SLOT(flash()));
     Flash.start(800);
     tick->start(10);
-
-
 
     p->setMedia(QUrl("qrc:/sounds/sounds/MainMusic.mp3"));
     p->setVolume(100);
@@ -47,6 +44,27 @@ MainWindow::MainWindow(QWidget *parent,int begin)
     Partical3[4].load(":/Images/Images/3_4.png");
 
 
+    QCursor t(QPixmap::fromImage(QImage(":/Images/Images/cursor.png")));
+    this->setCursor(t);
+
+    for(i=0;i<50;i++){
+    trans[i] = new QGraphicsOpacityEffect();
+    trans[i]->setOpacity(0);
+    }
+
+    ui->Title->setGraphicsEffect(trans[0]);
+    ui->pushButton->setGraphicsEffect(trans[1]);
+    ui->pushButton_2->setGraphicsEffect(trans[2]);
+    ui->pushButton_3->setGraphicsEffect(trans[3]);
+    ui->pushButton_4->setGraphicsEffect(trans[4]);
+    ui->pushButton_5->setGraphicsEffect(trans[5]);
+    ui->pushButton_7->setGraphicsEffect(trans[6]);
+    ui->pushButton_8->setGraphicsEffect(trans[7]);
+
+
+    this->Me_Appear();
+
+
     connect(ui->pushButton,SIGNAL(Mouse_Click()),this,SLOT(Tap_Fun()));
     connect(ui->pushButton_2,SIGNAL(Mouse_Click()),this,SLOT(Tap_Fun()));
     connect(ui->pushButton_3,SIGNAL(Mouse_Click()),this,SLOT(Tap_Fun()));
@@ -72,13 +90,14 @@ MainWindow::MainWindow(QWidget *parent,int begin)
         out<<"S:83:S\n";
         out<<"A:65:A\n";
         out<<"D:68:D\n";
-        out<<"Shift:16777251:Shift\n";
-        out<<"Space:16777248:Space\n";
+        out<<"Shift:16777248:Shift\n";
+        out<<"Space:32:Space\n";
         out<<"L:76:L\n";
         file.close();
+        return;
     }    //默认构造settings.txt
 
-    file.open(QIODevice::ReadOnly);
+
     QTextStream read(&file);
 
 
@@ -139,29 +158,15 @@ MainWindow::MainWindow(QWidget *parent,int begin)
         settings.L=list[1].toInt();
     }
     }
+    file.close();
 
-    for(i=0;i<50;i++){
-    trans[i] = new QGraphicsOpacityEffect();
-    trans[i]->setOpacity(0);
-    }
-
-    ui->Title->setGraphicsEffect(trans[0]);
-    ui->pushButton->setGraphicsEffect(trans[1]);
-    ui->pushButton_2->setGraphicsEffect(trans[2]);
-    ui->pushButton_3->setGraphicsEffect(trans[3]);
-    ui->pushButton_4->setGraphicsEffect(trans[4]);
-    ui->pushButton_5->setGraphicsEffect(trans[5]);
-    ui->pushButton_7->setGraphicsEffect(trans[6]);
-    ui->pushButton_8->setGraphicsEffect(trans[7]);
-
-
-    this->Me_Appear();
 
 
 }
 
 MainWindow::~MainWindow()
 {
+    delete p;
     delete ui;
 }
 
@@ -262,15 +267,6 @@ void MainWindow::paintEvent(QPaintEvent *event){
     }
 
 
-
-
-
-
-
-
-
-
-
 }
 
 void MainWindow::PlayTap(){
@@ -328,7 +324,7 @@ void MainWindow::on_pushButton_2_clicked()
     Map=new EditMap;
     Map->show();
     this->~MainWindow();
-    p->~QMediaPlayer();
+
     return;
 }
 
@@ -337,7 +333,6 @@ void MainWindow::on_pushButton_3_clicked()
     if(Main_Mod==1)return;
     Battle=new BattleWindow(nullptr,0,settings);
     Battle->show();
-    p->~QMediaPlayer();
     this->~MainWindow();return;
 }
 
@@ -348,13 +343,13 @@ void MainWindow::on_pushButton_4_clicked()
         client=new Client;
         client->show();
         this->~MainWindow();
-        p->~QMediaPlayer();
+
         return;
     }
     Battle=new BattleWindow(nullptr,100,settings);
     Battle->show();
     this->~MainWindow();
-    p->~QMediaPlayer();
+
     return;
 }
 
@@ -370,13 +365,13 @@ void MainWindow::on_Story_clicked(){
         client=new Client;
         client->show();
         this->~MainWindow();
-        p->~QMediaPlayer();
+
         return;
     }
     Battle=new BattleWindow(nullptr,1,settings);
     Battle->show();
     this->~MainWindow();
-    p->~QMediaPlayer();
+
     return;
 }
 
@@ -386,13 +381,13 @@ void MainWindow::on_Battle_clicked()
         client=new Client;
         client->show();
         this->~MainWindow();
-        p->~QMediaPlayer();
+
         return;
     }
     Battle=new BattleWindow(nullptr,2,settings);
     Battle->show();
     this->~MainWindow();
-    p->~QMediaPlayer();
+
     return;
 }
 void MainWindow::CreatePartical(QRect Rect,Type type){
@@ -418,7 +413,7 @@ void MainWindow::mouseMoveEvent(QMouseEvent *ev){
 void MainWindow::on_pushButton_8_clicked()
 {
     this->~MainWindow();
-    p->~QMediaPlayer();
+
     return;
 }
 
@@ -463,7 +458,6 @@ void MainWindow::Setting_Appear(){
 
 void MainWindow::on_pushButton_7_clicked()
 {
-    //QMessageBox::information(nullptr,tr("Copr."),tr("本作品由Jack和Dgq原创\n未经允许禁止侵权\nAll rights reserved"), tr("好"));
     email = new Email;
     email->show();
 }

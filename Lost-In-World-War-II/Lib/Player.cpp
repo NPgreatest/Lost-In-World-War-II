@@ -26,7 +26,7 @@ Player::Player()
     this->MeImage.load(":/Images/Tank/TankUp.png");
 }
 void Player::Player_Move(int step){
-   if( (this->Choose==1||slow) && step!=-1)step+=2;
+   if( (slow) && step!=-1) step+=2;
     switch (head){
         case UP:MeRect.adjust(0,-step,0,-step);break;
         case DOWN:MeRect.adjust(0,step,0,step);break;
@@ -62,19 +62,21 @@ void Player::Player_ChangeHead(int dire){
 }
 
 
-bool Player::Player_B1Fire(){
-    return true;//无限子弹
+bool Player::Player_B1Fire(bool gua){
+    if(gua)return true;
     if(MP<10)
         return false;
     this->MP-=10;
     return true;
 }
-bool Player::Player_B2Fire(){
-
-        return true;
+bool Player::Player_B2Fire(bool gua){
+    if(gua)return true;
+    if(this->Process<50)return false;
+    this->Process-=50;
+    return true;
 }
-bool Player::Player_B3Fire(){
-    if(B3.GetAlive()==true) return false;
+bool Player::Player_B3Fire(bool gua){
+    if(B3.GetAlive()&&!gua) return false;
     QRect temp;
     temp=MeRect;
     switch (this->head) {
@@ -98,21 +100,21 @@ int Player::Damage(SkillName skillname){
     switch (skillname) {
     case SkillName::MainWeapon:
         switch (this->WeaponLv) {
-        case 1:return 6;
-        case 2:return 11;
-        case 3:return 16;
-        case 4:return 25;
+        case 1:return 2;
+        case 2:return 5;
+        case 3:return 10;
+        case 4:return 20;
         case 5:return 30;
         default:return 99999;
         }
         break;
     case SkillName::SubWeapon:
         switch (this->WeaponLv) {
-        case 1:return 2;
-        case 2:return 5;
-        case 3:return 10;
-        case 4:return 15;
-        case 5:return 20;
+        case 1:return 3;
+        case 2:return 6;
+        case 3:return 12;
+        case 4:return 25;
+        case 5:return 35;
         default:return 99999;
         }
         break;

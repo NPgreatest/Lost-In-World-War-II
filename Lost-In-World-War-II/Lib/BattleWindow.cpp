@@ -4,11 +4,15 @@
 #include"ui_mainwindow.h"
 
 
-BattleWindow::BattleWindow(QWidget  *parent,int Mission,Settings settings) :  QMainWindow(parent),Mission(Mission),ui(new Ui::BattleWindow){
+BattleWindow::BattleWindow(QWidget  *parent,int Mission,Settings settings)
+    : QMainWindow(parent),
+      Mission(Mission),
+      ui(new Ui::BattleWindow),
+      settings(settings){
 
     ui->setupUi(this);
 
-    setPalette(QPalette(Qt::yellow));
+    //setPalette(QPalette(Qt::yellow));
 
     setAutoFillBackground(true);
 
@@ -18,17 +22,23 @@ BattleWindow::BattleWindow(QWidget  *parent,int Mission,Settings settings) :  QM
     exit.load(":/Images/Images/cancel.png");
     temp.load(":/Images/Images/BattleGround.png");
 
-    this->settings=settings;
-
-    //this->setWindowFlags(Qt::FramelessWindowHint);//去掉标题栏
-
+    //实例化物体
     int i;
-    for(i=0;i<OBJECT_NUMBER;i++){//实例化物体
+    for(i=0;i<OBJECT_NUMBER;i++){
         object[i]=new Temp();
     }
+    //  实例化槽类
 
-//  实例化槽类
-    bar[0] = new Bar(350,1000,100,2);
+    if(settings.gamemode==1||settings.gamemode==0){
+    bar[0] = new Bar(350,1000,40,2);
+    }
+    else if(settings.gamemode==2){
+    bar[0] = new Bar(350,1000,30,2);
+    }
+    else if(settings.gamemode==3){
+    bar[0] = new Bar(350,1000,20,2);
+    }
+
     bar[1] = new Bar(900,1000,100,1);
     bar[2] = new Bar(1420,1000,100,3);
 //  实例化槽类
@@ -37,9 +47,9 @@ BattleWindow::BattleWindow(QWidget  *parent,int Mission,Settings settings) :  QM
     allmusic.AddHit2Music();
     allmusic.AddRedZoneMusic();
 
-    GLWidGet *openGL = new GLWidGet(this, this);
 
-    openGL->setGeometry(0, 0, 19200, 1080);
+
+    openGL->setGeometry(0, 0, 1920, 1080);
     openGL->lower();
 
     MeIp=get_ip();
@@ -54,6 +64,8 @@ BattleWindow::BattleWindow(QWidget  *parent,int Mission,Settings settings) :  QM
     connect(&EnemyMove, SIGNAL(timeout()), this, SLOT(Boss_Move()));
     connect(&EnemyAll, SIGNAL(timeout()), this, SLOT(Enemy_All()));
     connect(&ParticalTick, SIGNAL(timeout()), this, SLOT(Flash2()));
+
+    if(settings.internetmode==1)
     connect(&UploadData, SIGNAL(timeout()), this, SLOT(Write_Sql()));
 
     Timer.start(10);
@@ -64,7 +76,6 @@ BattleWindow::BattleWindow(QWidget  *parent,int Mission,Settings settings) :  QM
         this->Load_Introduce();
         return;
     }//介绍模式
-
 
 
       ParticalTick.start(50);
@@ -82,7 +93,6 @@ BattleWindow::BattleWindow(QWidget  *parent,int Mission,Settings settings) :  QM
 
       udp_socket->bind(port, QUdpSocket::ShareAddress | QUdpSocket::ReuseAddressHint);//设置udp 端口
       connect(udp_socket, &QUdpSocket::readyRead,this, &BattleWindow::Recive);
-
 
 
     switch (Mission) {
@@ -111,34 +121,23 @@ void BattleWindow::Load_Map(QString Address){
         return;
     }//加载地图失败
 
-    int i=0,read=0,tlv;
-    bool me=false;
+    int read=0,tlv;
     QRect Player_Rect;
     int thp,tmp;
 
-    QRect Object_Rect[OBJECT_NUMBER];
-    int type[OBJECT_NUMBER];
-    int skin[OBJECT_NUMBER];
-    int hp[OBJECT_NUMBER];
+    QRect Object_Rect;
+    int type;
+    int skin;
+    int hp;
 
-    int e_hp[ENEMY_NUMBER];
-    int e_speed[ENEMY_NUMBER];
-    int e_bullet_speed[ENEMY_NUMBER];
-    QRect Enemy_Rect[ENEMY_NUMBER];
-    int e_skin[ENEMY_NUMBER];
+    int e_hp;
+    int e_speed;
+    int e_bullet_speed;
+    QRect Enemy_Rect;
+    int e_skin;
 
     Player_Rect.setRect(0,0,0,0);
-    for(i = 0; i < ENEMY_NUMBER; i++){
-        e_hp[i]=0;
-        e_speed[i]=0;
-        e_bullet_speed[i]=0;
-        e_skin[i]=0;
-    }
-    for(i=0;i<OBJECT_NUMBER;i++){
-        type[i]=0;
-        skin[i]=0;
-        hp[i]=1;
-    }
+
 
     //加载地图
     QTextStream input(&file);
@@ -147,41 +146,39 @@ void BattleWindow::Load_Map(QString Address){
         QStringList list=line.split(" ");
         if(line=="CObject:"){
             read=1;
-            i=0;
             continue;
         }
         else if(line=="CPlayer:"){
-            me=true;
             read=2;
-            i=0;
             continue;
         }
         else if(line=="CEnemy:"){
             read=3;
-            i=0;
             continue;
         }
         switch (read) {
         case 1:
-            type[i]=list[0].toInt();
-            Object_Rect[i].setRect(list[1].toInt(),list[2].toInt(),list[3].toInt(),list[4].toInt());
-            hp[i]=list[5].toInt();
-            skin[i]=list[6].toInt();
-            i++;
+            type=list[0].toInt();
+            Object_Rect.setRect(list[1].toInt(),list[2].toInt(),list[3].toInt(),list[4].toInt());
+            hp=list[5].toInt();
+            skin=list[6].toInt();
+            CreateObject(Object_Rect,type,skin,hp);
             break;
         case 2:
             Player_Rect.setRect(list[0].toInt(),list[1].toInt(),40,40);
             thp=list[2].toInt();
             tmp=list[3].toInt();
             tlv=list[4].toInt();
+            CreatePlayer(Player_Rect,thp,tlv);
             break;
         case 3:
-            Enemy_Rect[i].setRect(list[0].toInt(),list[1].toInt(),list[2].toInt(),list[3].toInt());
-            e_hp[i]=list[4].toInt();
-            e_speed[i]=list[5].toInt();
-            e_bullet_speed[i]=list[6].toInt();
-            e_skin[i]=list[7].toInt();
-            i++;
+            Enemy_Rect.setRect(list[0].toInt(),list[1].toInt(),list[2].toInt(),list[3].toInt());
+            e_hp=list[4].toInt();
+            e_speed=list[5].toInt();
+            e_bullet_speed=list[6].toInt();
+            e_skin=list[7].toInt();
+            CreatePartical(Enemy_Rect,Type::Object_Hit);
+            CreateEnemy(Enemy_Rect,e_hp,e_speed,e_bullet_speed,e_skin);
             break;
         default:QMessageBox::information(nullptr,tr("提示"),tr("加载地图失败"), tr("好"));
             this->~BattleWindow();
@@ -192,21 +189,7 @@ void BattleWindow::Load_Map(QString Address){
         }
     }
     file.close();
-    //加载地图
 
-
-    if(me)
-        CreatePlayer(Player_Rect,thp,tlv);
-
-    for(i=0;i<OBJECT_NUMBER;i++){//创建物体
-        CreateObject(Object_Rect[i],type[i],skin[i],hp[i]);
-    }
-
-    for(i=0;i<ENEMY_NUMBER;i++){//创建敌人
-         if(!Enemy_Rect[i].width()||!Enemy_Rect[i].height()) continue;
-         CreatePartical(Enemy_Rect[i],Type::Object_Hit);
-         CreateEnemy(Enemy_Rect[i],e_hp[i],e_speed[i],e_bullet_speed[i],e_skin[i]);
-    }
 }
 
 
@@ -229,17 +212,14 @@ void BattleWindow::paint(QPainter *painter, QPaintEvent *event){
 
 
 
-        //画boss及其子弹
-        if(boss1->GetAlive()){
+        //画boss
+        if(boss1->GetAlive())
         painter->drawImage(boss1->GetRect(),boss1->GetImage());
-        //for(i=0;i<Edit_Min;i++){
-       //     painter->drawImage(boss1->GetB2(i).GetRect(),boss1->GetB2(i).GetImage());
-      //      }
-        }
-        //画boss及其子弹
+
+        //画boss
 
 
-            painter->drawImage(P1[0].GetSkill().GetRect(),P1[0].GetSkill().GetImage());//画技能槽
+
 
         for(i=0;i<OBJECT_NUMBER;i++){//创建物体
             if(!object[i]->GetAlive())continue;
@@ -268,10 +248,7 @@ void BattleWindow::paint(QPainter *painter, QPaintEvent *event){
 
         painter->drawImage(QRect(1840,1000,80,80),exit);
 
-        for(i=0;i<PARTICAL_NUMBER;i++){//创建粒子
-            if(!partical[i].GetAlive())continue;
-            painter->drawImage(partical[i].GetRect(),partical[i].GetImage());
-        }
+
 
         for(k=0;k<PLAYER_NUMBER_MAX;k++){
             if(!P1[k].GetActivate())continue;
@@ -294,6 +271,13 @@ void BattleWindow::paint(QPainter *painter, QPaintEvent *event){
            painter->drawImage(bar[i]->GetRect1(),bar[i]->GetImage1());
            painter->drawImage(bar[i]->GetRect2(),bar[i]->GetImage2());
         }
+
+        for(i=0;i<PARTICAL_NUMBER;i++){//创建粒子
+            if(!partical[i].GetAlive())continue;
+            painter->drawImage(partical[i].GetRect(),partical[i].GetImage());
+        }
+
+        painter->drawImage(P1[0].GetSkill().GetRect(),P1[0].GetSkill().GetImage());//画技能槽
 
         if(!Mission)drawIntroduce(*painter);//   draw  介绍模式
 
@@ -329,11 +313,16 @@ void BattleWindow::Controller(int number,KEYBOARD_CONTROLL key,HEAD head,double 
     case NO:break;
     }
     switch (key) {
-    case PCHANGE:P1[number].GetSkill().SkillChange();break;
+    case PCHANGE:{P1[number].GetSkill().SkillChange();
+        if(P1[number].GetSkill().GetSkill()!=SkillName::SubWeapon) return;
+        QCursor t(QPixmap::fromImage(QImage(":/Images/Images/cursor.png")));
+        t.setPos(P1[0].GetRect().center());
+        this->setCursor(t);}
+        break;
     case PFIRE:
         switch (P1[number].GetSkill().GetSkill()) {
         case SkillName::MainWeapon:
-            if(!P1[number].Player_B1Fire())
+            if(!P1[number].Player_B1Fire(settings.gamemode==0?true:false))
             {
             //播放MPOUT
             }
@@ -345,18 +334,14 @@ void BattleWindow::Controller(int number,KEYBOARD_CONTROLL key,HEAD head,double 
             }
             break;
         case SkillName::SubWeapon:
-          //  if(P1[number].GetProcess()!=100){
-          //      Play_MPOut();
-          //      return;
-          //  }
+            if(!P1[number].Player_B2Fire(settings.gamemode==0?true:false))return;
             for(k=-2;k<3;k++)
                 CreateBullet2(P1[i].GetRect().adjusted(15,15,-15,-15),
                               angle+(k*0.3),3,
                               P1[i].Damage(SkillName::SubWeapon),
                               Target::ALL,number,5,15);
-            P1[number].SetChoose(2);
             break;
-        case SkillName::Fire:if(P1[number].Player_B3Fire()){
+        case SkillName::Fire:if(P1[number].Player_B3Fire(settings.gamemode==0?true:false)){
                 allmusic.PlayFireMusic(settings.sound);
                 switch (P1[number].GetHead()) {
                 case UP:CreatePartical(P1[number].GetRect().adjusted(-50,-100,60,-40),Type::Player_B3_UP);break;
@@ -394,15 +379,20 @@ void BattleWindow::keyPressEvent(QKeyEvent *event){
                 this->Controller(0,PFIRE,Key[0],GetAngle(x,y));
             }
             if(event->key()==settings.L){
-                if(P1[i].GetChoose()==1)
+                if(P1[i].GetChoose()==1){
                     P1[i].SetChoose(0);
-                else if(P1[i].GetChoose()==0)
+                    P1[i].Player_UnSlow();
+                    }
+                else if(P1[i].GetChoose()==0){
                     P1[i].SetChoose(1);
+                    P1[i].Player_Slow();
+
+                    }
             }
             if(event->key()==settings.Shift)
                 this->Controller(0,PCHANGE,Key[0]);
             if(event->key()==61)
-                this->Command(QInputDialog::getText(this,"指令","请输入指令",QLineEdit::Normal,"/help",nullptr,Qt::WindowFlags(1),Qt::ImhNone));
+                this->Command(QInputDialog::getText(this,"Command","Please Input Command",QLineEdit::Normal,"/help",nullptr,Qt::WindowFlags(1),Qt::ImhNone));
          }
     }
 }
@@ -452,7 +442,7 @@ void BattleWindow::CreateObject(QRect Rect,int type,int skin,int hp){
     int i;
     for(i=0;i<OBJECT_NUMBER;i++){//创建物体
         if(!object[i]->GetAlive()){
-        object[i]->~Object();
+            delete object[i];
         break;
         }
 
@@ -471,11 +461,11 @@ void BattleWindow::CreateObject(QRect Rect,int type,int skin,int hp){
     case 11:object[i]=new Camp(Rect,3,hp);break;
     case 12:object[i]=new FirstAid(Rect,3);break;
     case 13:object[i]=new Weapon(Rect,3);break;
-    case 14:object[i]=new Ruins(Rect,skin);break;
-    case 15:object[i]=new Grass(Rect,skin);break;
+    case 14:object[i]=new Ruins(Rect,QRandomGenerator::global()->bounded(1,3));break;
+    case 15:object[i]=new Grass(Rect,QRandomGenerator::global()->bounded(1,3));break;
     case 16:object[i]=new Nail(Rect);break;
     case 17:object[i]=new Ice(Rect);break;
-    default:qDebug()<<"sonethings wrong..";break;
+    default:break;
     }
 }
 void BattleWindow::CreateRedZone(QRect Rect,int R,int type){
@@ -516,6 +506,7 @@ int BattleWindow::CreatePlayer(QRect MeRect,int HP,int WeaponLv){
     }
     return -1;
 }
+
 void BattleWindow::ClearMap(QRect Rect){//清理地图
     int i;
     for(i=0;i<ENEMY_NUMBER;i++){
@@ -529,13 +520,13 @@ void BattleWindow::ClearMap(QRect Rect){//清理地图
 }
 
 BattleWindow::~BattleWindow(){//释放内存
-    //allmusic.~AllMusic();
     int i;
         delete [] redzone;
         delete [] partical;
     for(i=0;i<OBJECT_NUMBER;i++){
         delete object[i];
     }
+    delete ui;
     delete [] enemy;
     delete [] bullet1;
     delete [] bullet2;
@@ -543,7 +534,11 @@ BattleWindow::~BattleWindow(){//释放内存
     delete bar[1];
     delete bar[2];
     delete boss1;
+    delete openGL;
+    delete udp_socket;
+    qDebug()<<"release success";
 }
+
 void BattleWindow::RainFire(){
     int r;
     QRect Rect(QRandomGenerator::global()->bounded(0,X_Max),

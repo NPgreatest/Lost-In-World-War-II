@@ -15,6 +15,7 @@ void BattleWindow::Introduce_Flash(){
         ParticalTick.start(50);
         EnemyMove.start(50);
         EnemyAll.start(100);
+        move.start(10);
     }
 
     if(Total_Time==120){
@@ -34,7 +35,7 @@ void BattleWindow::Introduce_Flash(){
                 move.start(10);
                 P1[0].Player_B1Fire();
             }*/
-            if(Total_Time>=250&&Total_Time<300){
+            if(Total_Time>=250&&Total_Time<280){
                // P1[0].Player_ChangeHead(1);
                // move.start(10);
                // P1[0].Player_B1Fire();
@@ -47,9 +48,10 @@ void BattleWindow::Introduce_Flash(){
                 P1[0].Player_B1Fire();
             }*/
             if(Total_Time==400){
-                this->~BattleWindow();
                 backto=new MainWindow();
                 backto->show();
+                this->~BattleWindow();
+                return;
             }
 }
 void BattleWindow::Load_Introduce(){

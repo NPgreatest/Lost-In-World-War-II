@@ -26,7 +26,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr,int begin=0);
+    MainWindow(QWidget *parent=nullptr);
     ~MainWindow();
     void Me_Appear();
     void PlayTap();
@@ -91,7 +91,7 @@ private:
     int Times=0;
     int Seed();
     void CreatePartical(QRect Rect,Type type);
-    void mouseMoveEvent(QMouseEvent *ev);
+    void mouseMoveEvent(QMouseEvent *ev) Q_DECL_OVERRIDE ;
 };
 
 

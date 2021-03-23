@@ -1,7 +1,7 @@
 QT       += core gui
 QT       += multimedia
 QT       += opengl
-
+RC_ICONS = icon.ico
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++11
@@ -22,8 +22,7 @@ FORMS += \
     Lib/Setting.ui \
     mainwindow.ui
 
-TRANSLATIONS += \
-    Project1_zh_CN.ts
+
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

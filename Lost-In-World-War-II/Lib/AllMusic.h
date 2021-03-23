@@ -3,6 +3,8 @@
 #include<QMediaPlayer>
 #include<QRandomGenerator>
 #include"All.h"
+
+
 class AllMusic
 {
 private:

@@ -14,19 +14,19 @@
    <bool>true</bool>
   </property>
   <property name="windowTitle">
-   <string>迷失的坦克1.2.0</string>
+   <string>迷失的坦克1.3.0</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <property name="mouseTracking">
     <bool>true</bool>
    </property>
-   <widget class="Button" name="pushButton">
+   <widget class="QPushButton" name="pushButton">
     <property name="geometry">
      <rect>
-      <x>1480</x>
-      <y>940</y>
-      <width>221</width>
-      <height>81</height>
+      <x>1750</x>
+      <y>980</y>
+      <width>80</width>
+      <height>80</height>
      </rect>
     </property>
     <property name="mouseTracking">
@@ -35,8 +35,11 @@
     <property name="focusPolicy">
      <enum>Qt::NoFocus</enum>
     </property>
+    <property name="styleSheet">
+     <string notr="true">border-image: url(:/Images/Images/door-handle.png);</string>
+    </property>
     <property name="text">
-     <string>join the game..</string>
+     <string/>
     </property>
    </widget>
    <widget class="QLabel" name="label_2">
@@ -118,13 +121,6 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>Button</class>
-   <extends>QPushButton</extends>
-   <header location="global">button.h</header>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>

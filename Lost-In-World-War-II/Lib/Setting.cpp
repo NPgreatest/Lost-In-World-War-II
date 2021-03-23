@@ -80,13 +80,12 @@ Setting::Setting(QWidget *parent) :
         out<<"S:83:S\n";
         out<<"A:65:A\n";
         out<<"D:68:D\n";
-        out<<"Shift:16777251:Shift\n";
-        out<<"Space:16777248:Space\n";
+        out<<"Shift:16777248:Shift\n";
+        out<<"Space:32:Space\n";
         out<<"L:76:L\n";
         file.close();
     }    //默认构造settings.txt
 
-    file.open(QIODevice::ReadOnly);
     QTextStream read(&file);
 
     while(!read.atEnd()){
@@ -327,7 +326,7 @@ void Setting::on_pushButton_3_clicked(){
 }
 void Setting::Me_Close(){
   this->~Setting();
-    mainwindow= new MainWindow();
+    mainwindow= new MainWindow;
     mainwindow->show();
 }
 void Setting::Me_Vanish(){

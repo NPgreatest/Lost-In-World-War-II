@@ -14,10 +14,10 @@ void BattleWindow::Bullet_HitCheck(){
 
         //方块判定
         for(k=0;k<OBJECT_NUMBER;k++){
-                if(!object[k]->GetAlive()||(bullet1[i].GetMaster()==100&&object[k]->GetType()==5))continue;//敌人不会打兵营
+                if(!object[k]->GetAlive()||(bullet1[i].GetMaster()==-1&&object[k]->GetType()==5)) continue;//敌人不会打兵营
                 if(bullet1[i].GetRect().intersects(object[k]->GetRect())&&object[k]->Hit()){
                         CreatePartical(object[k]->GetRect(),Type::Object_Hit);
-                        this->Bullet_Dead(i);
+                        bullet1[i].PlayerBullet1_Dead();
                         allmusic.PlayHitMusic(settings.sound);
                 }
         }
@@ -32,7 +32,7 @@ void BattleWindow::Bullet_HitCheck(){
                 if(!enemy[k].GetAlive())continue;
                 if(bullet1[i].GetRect().intersects(enemy[k].GetRect())){
                     enemy[k].Enemy_UnderAttack(bullet1[i].GetDamage());
-                    this->Bullet_Dead(i);
+                    bullet1[i].PlayerBullet1_Dead();
                     allmusic.PlayHit2Music(settings.sound);
                     if(!enemy[k].GetAlive())CreatePartical(enemy[k].GetRect().adjusted(-50,-50,100,100),Type::Object_Hit);
                     else {CreatePartical(enemy[k].GetRect(),Type::Object_Hit);}
@@ -40,7 +40,7 @@ void BattleWindow::Bullet_HitCheck(){
             }
                     if(bullet1[i].GetAlive() && boss1->GetAlive() && bullet1[i].GetRect().intersects(boss1->GetRect())){
                         bullet1[i].PlayerBullet1_Dead();
-                        boss1->Boss1_UnderAttack(P1[k].Damage(SkillName::MainWeapon));
+                        boss1->Boss1_UnderAttack(bullet1[i].GetDamage());
                         CreatePartical(boss1->GetRect(),Type::Object_Hit);
                     }
 
@@ -49,10 +49,10 @@ void BattleWindow::Bullet_HitCheck(){
             for(k=0;k<PLAYER_NUMBER_MAX;k++){
                 if(!P1[k].GetActivate()||k==bullet1[i].GetMaster())continue;//玩家友伤不会命中自己
                 if(bullet1[i].GetRect().intersects(P1[k].GetRect())){
-                    P1[k].Player_UnderAttack(bullet1[i].GetDamage());
+                    P1[k].Player_UnderAttack(bullet1[i].GetDamage(),settings.gamemode==0?true:false);
                     CreatePartical(P1[k].GetRect(),Type::Player_Damage);
                     CreatePartical(P1[k].GetRect(),Type::Explotion);
-                    this->Bullet_Dead(i);
+                    bullet1[i].PlayerBullet1_Dead();
                     allmusic.PlayHit2Music(settings.sound);
                 }
             }
@@ -80,7 +80,7 @@ void BattleWindow::Bullet_HitCheck(){
         //方块判定
 
         //玩家和敌人判定
-        switch (bullet2[i].GetTarget()) {
+        switch (bullet2[i].GetTarget()){
         case Target::OBJECT:break;
         case Target::ALL:
         case Target::ENEMY:
@@ -95,7 +95,7 @@ void BattleWindow::Bullet_HitCheck(){
                     }
             }
                  if(boss1->GetAlive()&&bullet2[i].GetRect().intersects(boss1->GetRect())){
-                     boss1->Boss1_UnderAttack(P1[k].Damage(SkillName::SubWeapon));
+                     boss1->Boss1_UnderAttack(bullet2[i].GetDamage());
                      CreatePartical(boss1->GetRect(),Type::Object_Hit);
                      bullet2[i].Hit();
                      allmusic.PlayHit2Music(settings.sound);
@@ -105,7 +105,7 @@ void BattleWindow::Bullet_HitCheck(){
             for(k=0;k<PLAYER_NUMBER_MAX;k++){
                 if(!P1[k].GetActivate()||k==bullet2[i].GetMaster())continue;//玩家友伤不会命中自己
                 if(bullet2[i].GetRect().intersects(P1[k].GetRect())){
-                    P1[k].Player_UnderAttack(bullet2[i].GetDamage());
+                    P1[k].Player_UnderAttack(bullet2[i].GetDamage(),settings.gamemode==0?true:false);
                     CreatePartical(P1[k].GetRect(),Type::Player_Damage);
                     CreatePartical(P1[k].GetRect(),Type::Explotion);
                     bullet2[i].PlayerBullet2_Dead();
@@ -113,10 +113,11 @@ void BattleWindow::Bullet_HitCheck(){
                 }
             }
             if(bullet2[i].GetTarget()==Target::PLAYER)break;
-
         }
         //玩家和敌人判定
     }
+
+
 
     //子弹命中敌人B3
     for(i=0;i<ENEMY_NUMBER;i++){//
@@ -145,7 +146,7 @@ void BattleWindow::Bullet_HitCheck(){
     }//玩家打中boss判定
     if(B3[i])P1[i].GetB3().PlayerBullet3_Dead();
     if(P1[i].GetRect().intersects(boss1->GetB3().GetRect())&&boss1->GetB3().GetFlash()>=50&&boss1->GetAlive()){//boss技能判定
-        P1[i].Player_UnderAttack(100);
+        P1[i].Player_UnderAttack(100,settings.gamemode==0?true:false);
         allmusic.PlayHit2Music(settings.sound);
         CreatePartical(P1[i].GetRect(),Type::Player_Damage);
         boss1->GetB3().PlayerBullet3_Dead();

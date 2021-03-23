@@ -1,6 +1,7 @@
 #include "Email.h"
 #include "ui_Email.h"
 #include <QDesktopServices>
+#include <QMessageBox>
 Email::Email(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::Email)
@@ -23,10 +24,10 @@ void Email::on_pushButton_clicked()
 
 void Email::on_pushButton_3_clicked()
 {
-
+    QDesktopServices::openUrl(QUrl(QString("https://github.com/NPgreatest/Lost-In-World-War-II")));
 }
 
 void Email::on_pushButton_2_clicked()
 {
-    QDesktopServices::openUrl(QUrl(QString("https://github.com/NPgreatest/Lost-In-World-War-II")));
+    QMessageBox::information(nullptr,tr("adress:"),tr("bc1qs4wjugsplm8jesper6qrfsmrdpktld6slyds3k"), tr("OK"));
 }

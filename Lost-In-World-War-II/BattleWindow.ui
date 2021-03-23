@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="cursor">
-   <cursorShape>ArrowCursor</cursorShape>
+   <cursorShape>CrossCursor</cursorShape>
   </property>
   <property name="mouseTracking">
    <bool>true</bool>
@@ -20,7 +20,7 @@
    <enum>Qt::WheelFocus</enum>
   </property>
   <property name="windowTitle">
-   <string>迷失的坦克1.2.0</string>
+   <string>迷失的坦克1.3.0</string>
   </property>
   <property name="animated">
    <bool>true</bool>

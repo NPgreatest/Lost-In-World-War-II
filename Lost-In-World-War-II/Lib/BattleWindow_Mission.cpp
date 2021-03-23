@@ -4,19 +4,28 @@
 
 
 void BattleWindow::MissionRougueLike(){
-Load_Map(":/RougeLike/RougeLike/1_1_0.txt");
-LevelB++;
+    Load_Map(":/RougeLike/RougeLike/1_1_0.txt");
+    if(settings.gamemode==1){
+    P1[0].Strengthen(20,0,2,0);
+    }
+    else if(settings.gamemode==2){
+    P1[0].Strengthen(10,0,1,0);
+    }
+    else if(settings.gamemode==3){
+    P1[0].Strengthen(5,0,0,0);
+    }
+    LevelB++;
 }
 void BattleWindow::MissionRougueLike_Win(){
     if (Win==false)return;
     switch (LevelA) {
-    case 1: Map=LevelB;
+    case 1: Map=0;
             Total_Time=0;
             switch (LevelB) {
             case 2:ClearMap(QRect(0,600,40,40));Load_Map(":/RougeLike/RougeLike/1_2_0.txt");LevelB++;break;
             case 3:ClearMap(QRect(300,950,40,40));Load_Map(":/RougeLike/RougeLike/1_3_0.txt");LevelB++;break;
-            case 4:ClearMap(QRect(1450,500,40,40));Load_Map(":/RougeLike/RougeLike/1_4_0.txt");LevelB++;break;
-            case 5:ClearMap(QRect(200,950,40,40));Load_Map(":/RougeLike/RougeLike/1_5_0.txt");LevelB++;break;
+            case 4:ClearMap(QRect(1850,500,40,40));Load_Map(":/RougeLike/RougeLike/1_4_0.txt");LevelB++;break;
+            case 5:ClearMap(QRect(400,950,40,40));Load_Map(":/RougeLike/RougeLike/1_5_0.txt");LevelB++;break;
             case 6:ClearMap(QRect(0,800,40,40));Load_Map(":/RougeLike/RougeLike/1_6_0.txt");LevelB++;break;
             case 7:ClearMap(QRect(200,950,40,40));Load_Map(":/RougeLike/RougeLike/1_7_0.txt");LevelB++;break;
             case 8:ClearMap(QRect(750,950,40,40));Load_Map(":/RougeLike/RougeLike/1_8_0.txt");LevelB++;break;
@@ -28,26 +37,37 @@ void BattleWindow::MissionRougueLike_Win(){
     }
 }
 void BattleWindow::MissionRougueLike_Continue(){
-    switch (LevelA) {
-    case 1:
+    switch (LevelB) {
+    case 3:
         switch (Map) {
-        case 3:Map++;Load_Map(":/RougeLike/RougeLike/1_3_1.txt");break;
-        case 8:Map++;Load_Map(":/RougeLike/RougeLike/1_8_1.txt");break;
-        case 9:{
-            Map++;
-            Load_Map(":/RougeLike/RougeLike/1_8_2.txt");
+        case 0:Map++;Load_Map(":/RougeLike/RougeLike/1_2_1.txt");break;
+        }break;
+    case 4:
+        switch (Map) {
+        case 0:Map++;Load_Map(":/RougeLike/RougeLike/1_3_1.txt");break;
+        case 1:Map++;Load_Map(":/RougeLike/RougeLike/1_3_2.txt");break;
+        }break;
+    case 5:switch (Map) {
+        case 0:Map++;Load_Map(":/RougeLike/RougeLike/1_4_1.txt");break;
+        }break;
+    case 9:
+        switch (Map) {
+        case 0:Map++;Load_Map(":/RougeLike/RougeLike/1_8_1.txt");break;
+        case 1:Map++;Load_Map(":/RougeLike/RougeLike/1_8_2.txt");
             CreateRedZone(QRect(700,400,300,300),75,1);
-            new(boss1)Boss1(QRect(100,350,150,150),100,1);
+            new(boss1)Boss1(QRect(50,50,150,150),100,1);
             break;
-        }
-        }
+        }break;
+        break;
 
     }
 }
+
+
 void BattleWindow::MissionTeach(){
     EnemyAll.stop();
    Load_Map(":/maps/maps/1_1.txt");
-   CreatePartical(QRect(0,0,2000,1000),Type::Dialog1);
+   CreatePartical(QRect(0,0,1920,1080),Type::Dialog1);
 }
 
 void BattleWindow::MissionTeach_Win(){
@@ -68,6 +88,7 @@ void BattleWindow::MissionTeach_Win(){
 }
 
 void BattleWindow::MissionTick(){
+    int i;
     if(Mission==1){
     switch (LevelB) {
     case 1:
@@ -113,8 +134,10 @@ void BattleWindow::MissionTick(){
             Process++;
             CreatePartical(QRect(0,500,1500,500),Type::Dialog8);
         }
-        if(Total_Time==5){
-            //asdawdawdawd
+        if(Total_Time>=5&&Total_Time<=15){
+            for(i=0;i<5;i++)
+            this->RainFire();
+
         }
         if(Total_Time==22){
             LevelB++;
@@ -133,9 +156,9 @@ void BattleWindow::MissionTick(){
             Load_Map(":/maps/maps/1_6.txt");
         }
         if(Process==0&&Total_Time==15){
-            P1[0].Strengthen(-P1[0].GetHP()+100,0,0,0);
+            this->MissionTechEnd();
         }
-        if(Process==0&&Total_Time==20){
+ /*       if(Process==0&&Total_Time==20){
             P1[0].Strengthen(-P1[0].GetHP()+80,0,0,0);
         }
         if(Process==0&&Total_Time==22){
@@ -148,17 +171,20 @@ void BattleWindow::MissionTick(){
             P1[0].Strengthen(-P1[0].GetHP()+10,0,0,0);
         }
         if(Process==0&&Total_Time==28){
-            P1[0].Strengthen(-P1[0].GetHP()-10000,0,0,0);
-        }
+
+        }*/
 
 
         if(Process==1&&Total_Time>=10){
             if(Total_Time==2){
                 CreateRedZone(QRect(1100,400,40,40),300,1);
             }
+
+            backto=new MainWindow();
+            backto->show();
+            this->~BattleWindow();
             QMessageBox::information(nullptr,tr("提示"),tr("新手任务结束"), tr("好"));
-            this->~BattleWindow();backto=new MainWindow;
-            backto->setMouseTracking(true);backto->show();
+            return;
         }
         break;
     }
@@ -198,22 +224,15 @@ void BattleWindow::MissionTick(){
             if(Total_Time==30){
             CreateRedZone(QRect(455,846,40,40),100,1);
             }
-        //case 4:
-       // case 5:
-       // case 6:
-       // case 7:break;
-        //case 8:break;
         }
     }
 }
 void BattleWindow::MissionTechEnd(){
-    EnemyAll.stop();
-    P1[0].SetPos(QRect(-1000,-1000,40,40));
     LevelB=4;
     Total_Time=0;
     Process=1;
-    P1[0].Strengthen(100000,0,0,0);
+    P1[0].Strengthen(1000,0,0,0);
     ClearMap(QRect(0,0,40,40));
-    CreatePartical(QRect(0,0,2000,1000),Type::DialogEnd);
-
+    CreatePartical(QRect(0,0,1920,1080),Type::DialogEnd);
 }
+//CreateRedZone 1000 500 999

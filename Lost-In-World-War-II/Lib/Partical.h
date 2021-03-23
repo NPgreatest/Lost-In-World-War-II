@@ -14,8 +14,6 @@ private:
     QImage MeImage;
     QRect MeRect;
     Type type;
-    //QImage Image_Transparent(QImage image,int x);
-    //QImage SetAlpha(QImage img, int alpha);
 public:
     QImage GetImage(){return MeImage;}
     QRect GetRect(){return MeRect;}

@@ -354,6 +354,7 @@ int Client::GetEnemyImage(int type,HEAD head){
     case DOWN:return 2+((type-1)*10);
     case LEFT:return 3+((type-1)*10);
     case RIGHT:return 4+((type-1)*10);
+    default:break;
     }
     return 1;
 }

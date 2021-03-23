@@ -149,7 +149,7 @@ void EditMap::paintEvent(QPaintEvent *event){
 
     number[1].load(":/Images/Object/Wall1.png");
     number[2].load(":/Images/Object/BedRock1.png");
-    number[3].load(":/Images/Object/River1.jpg");
+    number[3].load(":/Images/Object/River1.png");
     number[5].load(":/Images/Object/Camp1.jpg");
     number[4].load(":/Images/Object/Portal.png");
     number[6].load(":/Images/Object/FirstAid1.png");

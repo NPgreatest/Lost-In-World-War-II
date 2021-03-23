@@ -34,7 +34,7 @@ public:
     QRect& GetRect() {return MeRect;}
     void Player_Move(int step);
     void Player_ChangeHead(const int dire);
-    void Player_UnderAttack(const int damage){this->HP-=damage;}
+    void Player_UnderAttack(const int damage=0,bool gua=false){if(gua)return;this->HP-=damage;}
     void Player_Dead(){this->Activate=false;}
     HEAD GetHead(){return head;}
     int GetHP(){return HP;}
@@ -48,9 +48,9 @@ public:
     bool GetSlow()const{return slow;}
     void Strengthen(int HP,int MP,int WeaponLv,int speed);
     void SetPos(QRect MeRect){this->MeRect=MeRect;}
-    bool Player_B1Fire();
-    bool Player_B2Fire();
-    bool Player_B3Fire();
+    bool Player_B1Fire(bool gua=false);
+    bool Player_B2Fire(bool gua=false);
+    bool Player_B3Fire(bool gua=false);
     int Damage(SkillName skillname);
     bool GetActivate(){return Activate;}
 };

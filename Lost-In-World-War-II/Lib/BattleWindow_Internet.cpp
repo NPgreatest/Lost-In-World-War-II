@@ -3,7 +3,6 @@
 #include"mainwindow.h"
 
 void BattleWindow::Write_Sql(){
-  //  qDebug()<<"begin writeDatagram:......";
     int i;
 
     for(i=0;i<OBJECT_NUMBER;i++){
@@ -92,16 +91,13 @@ void BattleWindow::Write_Sql(){
 
     for(i=1;i<PLAYER_NUMBER_MAX;i++){
         if(!P1[i].GetActivate()) continue;
-        qDebug()<<"mesesge send...";
         output<<Message::Load_Bar<<i;
         output<<P1[i].GetHP()<<P1[i].GetMP()<<P1[i].GetProcess();
     }
 
     udp_socket->writeDatagram(data, data.length(),QHostAddress::Broadcast, this->port);
 
-   data.clear();
-   // qDebug()<<"writeDatagram Done!";
-
+    data.clear();
 }
 
 
@@ -191,14 +187,4 @@ void BattleWindow::Recive(){
 
 
     }
-}
-
-void BattleWindow::Bullet_Dead(int number){
-    bullet1[number].PlayerBullet1_Dead();
-   /* QByteArray data;
-    data.resize(udp_socket->pendingDatagramSize());
-    udp_socket->readDatagram(data.data(), data.size());
-    QDataStream in(&data, QIODevice::WriteOnly);
-    in<<Message::Dead_Bullet<<number;
-    udp_socket->writeDatagram(data, data.length(),QHostAddress::Broadcast, this->port);*/
 }

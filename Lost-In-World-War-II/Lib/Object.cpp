@@ -64,23 +64,22 @@ bool BedRock::Hit(){
 }
 River::River(QRect MeRect,int skin):Object(MeRect,skin,3),flash(1){
     Alive=true;
-    MeImage.load(":/Images/Object/River1.jpg");
+    MeImage.load(":/Images/Object/River1.png");
+    Backup.load(":/Images/Object/River2.png");
 }
 void River::Flash(){
     flash=-flash;
     if(flash==1){
-        MeImage.load(":/Images/Object/River1.jpg");
         this->Status=1;
     }else{
-        MeImage.load(":/Images/Object/River2.jpg");
         this->Status=0;
     }
 }
 void River::SetStatue(int x){
     this->Object::SetStatue(x);
     switch (x) {
-    case 0:MeImage.load(":/Images/Object/River1.jpg");break;
-    case 1:MeImage.load(":/Images/Object/River2.jpg");break;
+    case 1:MeImage.load(":/Images/Object/River1.png");break;
+    case 0:MeImage.load(":/Images/Object/River2.png");break;
     default:break;
     }
 }
@@ -221,14 +220,13 @@ void Nail::SetStatue(int x){
 Ice::Ice(QRect MeRect):Object(MeRect,1,11){
     this->flash=1;Alive=true;
     MeImage.load(":/Images/Object/Ice1.png");
+    Backup.load(":/Images/Object/Ice2.png");
 }
 void Ice::Flash(){
     flash=-flash;
     if(flash==1){
         this->Status=1;
-        MeImage.load(":/Images/Object/Ice1.png");
     }else{
-        MeImage.load(":/Images/Object/Ice2.png");
         this->Status=0;
     }return;
 }
