@@ -8,8 +8,8 @@
 * The fourth button is to load a homebrew map
 * The fifth button is for settings
 
-== The controls are W, A, S, D, spacebar to fire. ==
-== L Shift to switch skills. ==
+## The controls are W, A, S, D, spacebar to fire.
+## L Shift to switch skills. 
 
 no image resourse
 Cancel Changes
